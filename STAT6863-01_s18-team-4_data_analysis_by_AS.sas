@@ -20,3 +20,29 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 
+title1
+'Research Question 1: What is the marcket cap of Bitcoin BTC from April 2015 to April 2016?'
+;
+
+title2
+'Rationale: This will help identify the market cap  of Bitcoin as compared to other cryptocurrency'
+;
+
+
+title1
+'Research Question 2: What are the top 5 highest prices and  lowest prices between this time period?'
+;
+
+title2
+'Rationale: This would help provide more insight into how cryptocurrency fared'
+;
+
+
+title1
+'Research Question 3: What are the top 5 lowest prices between this time period??'
+;
+
+title2
+'Rationale: This would provide help identify the time and market conditions leading to it.'
+;
+

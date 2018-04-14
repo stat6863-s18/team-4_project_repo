@@ -1,3 +1,3 @@
 # team-4_project_repo
 
-Team Nickname: The Proc BTC
+Team Nickname: The Proc Titans

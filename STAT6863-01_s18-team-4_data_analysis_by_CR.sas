@@ -33,7 +33,8 @@ limitations: Value of zero on in any column should exclude for comparison.
 *
 Question: What is the relationship between date and volume?
 
-Rationale: This would provide details that, how volume is related to the date. we can explore this by using weekday and weekend also.
+Rationale: This would provide details that, how volume is related to the date. 
+we can explore this by using weekday and weekend also.
 
 Note: This can be answered by plotting date on one axis and volume on another axis.
 

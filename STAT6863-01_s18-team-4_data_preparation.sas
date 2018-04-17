@@ -53,15 +53,15 @@ basic calculations to measure the differences and percentage changes in a day.
 ;
 %let inputDataset2DSN = btcusd17;
 %let inputDataset2URL =
-https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd17.xlsx?raw=true;
+https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd17.xlsx?raw=true
+;
 %let inputDataset2Type = XLSX;
 
 
 *
 [Dataset 3 Name] btcusd18
 
-[Dataset Description] Historical data for Bitcoin BTC from April 7, 2017 to 
-April 6, 2018
+[Dataset Description] Historical data for Bitcoin BTC from April 7, 2017 to April 6, 2018
 
 [Experimental Unit Description] Details of historical data for Bitcoin BTC from 
 April 7, 2015 to April 6, 2016 such as open, close, high, low prices, plus some 
@@ -80,7 +80,8 @@ basic calculations to measure the differences and percentage changes in a day.
 ;
 %let inputDataset3DSN = btcusd18;
 %let inputDataset3URL =
-https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd18.xlsx?raw=true;
+https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd18.xlsx?raw=true
+;
 %let inputDataset3Type = XLSX;
 
 

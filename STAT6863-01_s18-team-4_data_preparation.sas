@@ -260,7 +260,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd16_F ";
+title "Low in btcusd16_F ";
 proc sql;
     select
          min(Low) as min
@@ -274,7 +274,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd16_F ";
+title "close in btcusd16_F ";
 proc sql;
     select
          min(Close) as min
@@ -288,7 +288,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd16_F ";
+title "valume in btcusd16_F ";
 proc sql;
     select
          min(Volume) as min
@@ -331,7 +331,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd17_F ";
+title "Low in btcusd17_F ";
 proc sql;
     select
          min(Low) as min
@@ -345,7 +345,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd17_F ";
+title "Close in btcusd17_F ";
 proc sql;
     select
          min(Close) as min
@@ -359,7 +359,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd17_F ";
+title "Volume in btcusd17_F ";
 proc sql;
     select
          min(Volume) as min
@@ -401,7 +401,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd18_F ";
+title "Low in btcusd18_F ";
 proc sql;
     select
          min(Low) as min
@@ -415,7 +415,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd18_F ";
+title "Close in btcusd18_F ";
 proc sql;
     select
          min(Close) as min
@@ -429,7 +429,7 @@ proc sql;
 quit;
 title;
 
-title "High in btcusd18_F ";
+title "Volume in btcusd18_F ";
 proc sql;
     select
          min(Volume) as min
@@ -442,4 +442,6 @@ proc sql;
     ;
 quit;
 title;
+
+
 

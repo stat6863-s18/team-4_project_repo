@@ -25,6 +25,7 @@ Note: This comparison can be answered by comparing column open and column close
 from table btcusd16, btcusd17 and from btcusd18.
 
 limitations: Value of zero on in any column should exclude for comparison.
+otherwise it will be misleading value for open or close.
 ;
 
 
@@ -40,7 +41,7 @@ we can explore this by using weekday and weekend also.
 Note: This can be answered by plotting Date_ID column on one axis and volume on 
 another axis of table btcusd16, btcusd17 and from btcusd18.
 
-Limitations: Zeros should be excluded for plot.
+Limitations: Zeros in the volume column should be excluded for plot.
 ;
 
 

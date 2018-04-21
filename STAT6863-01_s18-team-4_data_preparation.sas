@@ -128,3 +128,320 @@ https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd18.xlsx?r
 %mend;
 %loadDatasets
 
+* check btcusd16 for bad unique id values, where the columns Date_ID;
+proc sql;
+	/*check for duplicate unique id values; after executing this query, we
+       see that btcusd16.xlsx has zero rows which are repeated,we will deal with missing unique id component
+       in the next query */
+	create table btcusd16_dups as
+        select
+             Date_ID
+            ,count(*) as row_count_for_unique_id_value
+        from
+            btcusd16
+        group by
+             Date_ID
+        having
+            row_count_for_unique_id_value > 1
+    ;
+
+
+	/* remove rows with missing unique id components, or with unique ids that
+       does not have corresponding values; after executing this query, the new
+       dataset final_btcusd16 will have no duplicate/repeated unique id values,
+       and all unique id values will correspond to our experimenal units of
+       interest, which are the Dates;*/
+     create table btcusd16_F as
+        select
+            *
+        from
+            btcusd16
+        where
+            /* remove rows with missing unique id value components */
+            not(missing(Date_ID))
+    ;
+quit;
+
+* check btcusd17 for bad unique id values, where the columns Date_ID;
+proc sql;
+	/*check for duplicate unique id values; after executing this query, we
+       see that btcusd17.xlsx has zero rows which are repeated,we will deal with missing unique id component
+       in the next query */
+	create table btcusd17_dups as
+        select
+             Date_ID
+            ,count(*) as row_count_for_unique_id_value
+        from
+            btcusd17
+        group by
+             Date_ID
+        having
+            row_count_for_unique_id_value > 1
+    ;
+
+
+	/* remove rows with missing unique id components, or with unique ids that
+       does not have corresponding values; after executing this query, the new
+       dataset final_btcusd17 will have no duplicate/repeated unique id values,
+       and all unique id values will correspond to our experimenal units of
+       interest, which are the Dates;*/
+     create table btcusd17_F as
+        select
+            *
+        from
+            btcusd17
+        where
+            /* remove rows with missing unique id value components */
+            not(missing(Date_ID))
+    ;
+quit;
+
+* check btcusd16 for bad unique id values, where the columns Date_ID;
+proc sql;
+	/*check for duplicate unique id values; after executing this query, we
+       see that btcusd18.xlsx has zero rows which are repeated,we will deal with missing unique id component
+       in the next query */
+	create table btcusd18_dups as
+        select
+             Date_ID
+            ,count(*) as row_count_for_unique_id_value
+        from
+            btcusd18
+        group by
+             Date_ID
+        having
+            row_count_for_unique_id_value > 1
+    ;
+
+
+	/* remove rows with missing unique id components, or with unique ids that
+       does not have corresponding values; after executing this query, the new
+       dataset final_btcusd18 will have no duplicate/repeated unique id values,
+       and all unique id values will correspond to our experimenal units of
+       interest, which are the Dates;*/
+     create table btcusd18_F as
+        select
+            *
+        from
+            btcusd18
+        where
+            /* remove rows with missing unique id value components */
+            not(missing(Date_ID))
+    ;
+quit;
+
+* inspect columns of interest in cleaned versions of datasets;
+
+title "open in btcusd16_F ";
+proc sql;
+    select
+         min(Open) as min
+        ,max(Open) as max
+        ,mean(Open) as max
+        ,median(Open) as max
+        ,nmiss(Open) as missing
+    from
+        btcusd16_F
+    ;
+quit;
+title;
+
+title "High in btcusd16_F ";
+proc sql;
+    select
+         min(High) as min
+        ,max(High) as max
+        ,mean(High) as max
+        ,median(High) as max
+        ,nmiss(High) as missing
+    from
+        btcusd16_F
+    ;
+quit;
+title;
+
+title "Low in btcusd16_F ";
+proc sql;
+    select
+         min(Low) as min
+        ,max(Low) as max
+        ,mean(Low) as max
+        ,median(Low) as max
+        ,nmiss(Low) as missing
+    from
+        btcusd16_F
+    ;
+quit;
+title;
+
+title "close in btcusd16_F ";
+proc sql;
+    select
+         min(Close) as min
+        ,max(Close) as max
+        ,mean(Close) as max
+        ,median(Close) as max
+        ,nmiss(Close) as missing
+    from
+        btcusd16_F
+    ;
+quit;
+title;
+
+title "valume in btcusd16_F ";
+proc sql;
+    select
+         min(Volume) as min
+        ,max(Volume) as max
+        ,mean(Volume) as max
+        ,median(Volume) as max
+        ,nmiss(Volume) as missing
+    from
+        btcusd16_F
+    ;
+quit;
+title;
+
+
+title "open in btcusd17_F ";
+proc sql;
+    select
+         min(Open) as min
+        ,max(Open) as max
+        ,mean(Open) as max
+        ,median(Open) as max
+        ,nmiss(Open) as missing
+    from
+        btcusd17_F
+    ;
+quit;
+title;
+
+title "High in btcusd17_F ";
+proc sql;
+    select
+         min(High) as min
+        ,max(High) as max
+        ,mean(High) as max
+        ,median(High) as max
+        ,nmiss(High) as missing
+    from
+        btcusd17_F
+    ;
+quit;
+title;
+
+title "Low in btcusd17_F ";
+proc sql;
+    select
+         min(Low) as min
+        ,max(Low) as max
+        ,mean(Low) as max
+        ,median(Low) as max
+        ,nmiss(Low) as missing
+    from
+        btcusd17_F
+    ;
+quit;
+title;
+
+title "Close in btcusd17_F ";
+proc sql;
+    select
+         min(Close) as min
+        ,max(Close) as max
+        ,mean(Close) as max
+        ,median(Close) as max
+        ,nmiss(Close) as missing
+    from
+        btcusd17_F
+    ;
+quit;
+title;
+
+title "Volume in btcusd17_F ";
+proc sql;
+    select
+         min(Volume) as min
+        ,max(Volume) as max
+        ,mean(Volume) as max
+        ,median(Volume) as max
+        ,nmiss(Volume) as missing
+    from
+        btcusd17_F
+    ;
+quit;
+title;
+
+title "open in btcusd18_F ";
+proc sql;
+    select
+         min(Open) as min
+        ,max(Open) as max
+        ,mean(Open) as max
+        ,median(Open) as max
+        ,nmiss(Open) as missing
+    from
+        btcusd18_F
+    ;
+quit;
+title;
+
+title "High in btcusd18_F ";
+proc sql;
+    select
+         min(High) as min
+        ,max(High) as max
+        ,mean(High) as max
+        ,median(High) as max
+        ,nmiss(High) as missing
+    from
+        btcusd18_F
+    ;
+quit;
+title;
+
+title "Low in btcusd18_F ";
+proc sql;
+    select
+         min(Low) as min
+        ,max(Low) as max
+        ,mean(Low) as max
+        ,median(Low) as max
+        ,nmiss(Low) as missing
+    from
+        btcusd18_F
+    ;
+quit;
+title;
+
+title "Close in btcusd18_F ";
+proc sql;
+    select
+         min(Close) as min
+        ,max(Close) as max
+        ,mean(Close) as max
+        ,median(Close) as max
+        ,nmiss(Close) as missing
+    from
+        btcusd18_F
+    ;
+quit;
+title;
+
+title "Volume in btcusd18_F ";
+proc sql;
+    select
+         min(Volume) as min
+        ,max(Volume) as max
+        ,mean(Volume) as max
+        ,median(Volume) as max
+        ,nmiss(Volume) as missing
+    from
+        btcusd18_F
+    ;
+quit;
+title;
+
+
+

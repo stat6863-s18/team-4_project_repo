@@ -15,10 +15,16 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: What is the marcket cap of Bitcoin BTC from April 2015 to April 2016?
+Question: What is the marcket cap of Bitcoin BTC from April 2016 to April 2018?
 
 Rationale: This will help identify the market cap  of Bitcoin as compared to 
 other cryptocurrency
+
+Note: This compares the column the column "MarketCap" from btcusd16 to the same
+name column from btcusd17 and btcusd18
+
+Limitations: This methodology does not account for datasets with missing 
+data neither does it attempt to validate data in any way.
 ;
 
 
@@ -30,6 +36,12 @@ Question: What are the top 5 highest prices and  lowest prices between this time
 period?
 
 Rationale: This would help provide more insight into how cryptocurrency fared
+
+Note: This compares the column "High"  from btcusd16 to the same name columns 
+from btcusd17 and btcusd18.
+
+Limitations: This methodology does not account for datasets with missing 
+data neither does it attempt to validate data in any way.
 ;
 
 
@@ -41,5 +53,11 @@ Question: What are the top 5 lowest prices between this time period?
 
 Rationale: This would provide help identify the time and market conditions 
 leading to it.
+
+Note: This compares the column the column "Low" from btcusd16 to the same 
+name columns from btcusd17 and btcusd18.
+
+Limitations: This methodology does not account for datasets with missing 
+data neither does it attempt to validate data in any way.
 ;
 

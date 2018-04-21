@@ -20,7 +20,11 @@ Question: What is the distribution of Bitcoin BTC from April 2016 to present?
 
 Rationale: This should help identify the specific distribution of BTC'
 
-Note: Use proc sort and print to display the result
+Note: This compares the column the column "Close" from btcusd16 to the same
+name column from btcusd17 and btcusd18.
+
+Limitations: This methodology does not account for any datasets with missing 
+data nor does it attempt to validate data in any way.
 ;
 
 
@@ -34,7 +38,11 @@ these years?
 Rationale: This would provide more BTC behaviors, movements and have a better 
 insights why there are such changes.
 
-Note: Use proc sort and print to display the result
+Note: This compares the column the column "High" and "Low" from btcusd16 to the 
+same name columns from btcusd17 and btcusd18.
+
+Limitations: This methodology does not account for any datasets with missing 
+data nor does it attempt to validate data in any way.
 ;
 
 
@@ -48,8 +56,12 @@ Rationale: This would provide more true understanding of a few major corrections
 in the past and use those outputs to forecast or predict the BTC price for the 
 year of 2018.
 
-Note: Use several mathematical and statistical techniques such as Fibonacci 
-Retracement, Bayes Theorem and Conditional Probability, and so on … to conduct 
-a hypothesis for trend and price prediction.
+Note: This compares the column the column "Date_ID" and "Low" from btcusd16 to 
+the same name columns from btcusd17 and btcusd18 to find a reverse movement 
+which is usually negative, and any resistance and support levels.
+
+Limitations: Even though predictive modeling is specified in the research
+questions, this methodology solely relies on a crude descriptive technique
+by looking at a trend line and linear regression.
 ;
 

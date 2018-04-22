@@ -26,7 +26,8 @@ basic calculations to measure the differences and percentage changes in a day.
 ;
 %let inputDataset1DSN = btcusd16;
 %let inputDataset1URL =
-https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd16.xlsx?raw=true;
+https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd16.xlsx?raw=true
+;
 %let inputDataset1Type = XLSX;
 
 

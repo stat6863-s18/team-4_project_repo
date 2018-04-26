@@ -45,6 +45,44 @@ Limitations: This methodology does not account for any datasets with missing
 data nor does it attempt to validate data in any way.
 ;
 
+proc sort
+    data=btcusd161718_v2
+    out=btcusd161718_v2_print1
+    ;
+    by descending High;
+run;
+
+proc print
+    noobs
+    data=btcusd161718_v2_print1(obs=10)
+    ;
+    id
+        Date_ID
+    ;
+    var
+        High
+    ;
+run;
+
+proc sort
+    data=btcusd161718_v2
+    out=btcusd161718_v2_print2
+    ;
+    by High;
+run;
+
+proc print
+    noobs
+    data=btcusd161718_v2_print2(obs=10)
+    ;
+    id
+        Date_ID
+    ;
+    var
+        High
+    ;
+run;
+
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;

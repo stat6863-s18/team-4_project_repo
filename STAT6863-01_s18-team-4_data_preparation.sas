@@ -86,6 +86,10 @@ https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd18.xlsx?r
 %let inputDataset3Type = XLSX;
 
 
+* set global system options;
+options fullstimer;
+
+
 * load raw datasets over the wire, if they doesn't already exist;
 %macro loadDataIfNotAlreadyAvailable(dsn,url,filetype);
     %put &=dsn;
@@ -119,7 +123,7 @@ https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd18.xlsx?r
         %end;
 %mend;
 %macro loadDatasets;
-    %do i = 1 %to 4;
+    %do i = 1 %to 3;
         %loadDataIfNotAlreadyAvailable(
             &&inputDataset&i.DSN.,
             &&inputDataset&i.URL.,
@@ -139,7 +143,7 @@ proc sql;
              Date_ID
             ,count(*) as row_count_for_unique_id_value
         from
-            btcusd16
+            btcusd16_raw
         group by
              Date_ID
         having
@@ -152,14 +156,16 @@ proc sql;
        dataset final_btcusd16 will have no duplicate/repeated unique id values,
        and all unique id values will correspond to our experimenal units of
        interest, which are the Dates;*/
-     create table btcusd16_F as
+     create table btcusd16 as
         select
             *
         from
-            btcusd16
+            btcusd16_raw
         where
             /* remove rows with missing unique id value components */
             not(missing(Date_ID))
+	order by
+	    Date_ID
     ;
 quit;
 
@@ -173,7 +179,7 @@ proc sql;
              Date_ID
             ,count(*) as row_count_for_unique_id_value
         from
-            btcusd17
+            btcusd17_raw
         group by
              Date_ID
         having
@@ -186,14 +192,16 @@ proc sql;
        dataset final_btcusd17 will have no duplicate/repeated unique id values,
        and all unique id values will correspond to our experimenal units of
        interest, which are the Dates;*/
-     create table btcusd17_F as
+     create table btcusd17 as
         select
             *
         from
-            btcusd17
+            btcusd17_raw
         where
             /* remove rows with missing unique id value components */
             not(missing(Date_ID))
+	order by
+	    Date_ID
     ;
 quit;
 
@@ -207,7 +215,7 @@ proc sql;
              Date_ID
             ,count(*) as row_count_for_unique_id_value
         from
-            btcusd18
+            btcusd18_raw
         group by
              Date_ID
         having
@@ -220,229 +228,312 @@ proc sql;
        dataset final_btcusd18 will have no duplicate/repeated unique id values,
        and all unique id values will correspond to our experimenal units of
        interest, which are the Dates;*/
-     create table btcusd18_F as
+     create table btcusd18 as
         select
             *
         from
-            btcusd18
+            btcusd18_raw
         where
             /* remove rows with missing unique id value components */
             not(missing(Date_ID))
+	order by
+	    Date_ID
     ;
 quit;
 
 * inspect columns of interest in cleaned versions of datasets;
-
-title "open in btcusd16_F ";
+/*
+title "open in btcusd16";
 proc sql;
     select
          min(Open) as min
         ,max(Open) as max
-        ,mean(Open) as max
-        ,median(Open) as max
+        ,mean(Open) as mean
+        ,median(Open) as median
         ,nmiss(Open) as missing
     from
-        btcusd16_F
+        btcusd16
     ;
 quit;
 title;
 
-title "High in btcusd16_F ";
+title "High in btcusd16";
 proc sql;
     select
          min(High) as min
         ,max(High) as max
-        ,mean(High) as max
-        ,median(High) as max
+        ,mean(High) as mean
+        ,median(High) as median
         ,nmiss(High) as missing
     from
-        btcusd16_F
+        btcusd16
     ;
 quit;
 title;
 
-title "Low in btcusd16_F ";
+title "Low in btcusd16";
 proc sql;
     select
          min(Low) as min
         ,max(Low) as max
-        ,mean(Low) as max
-        ,median(Low) as max
+        ,mean(Low) as mean
+        ,median(Low) as median
         ,nmiss(Low) as missing
     from
-        btcusd16_F
+        btcusd16
     ;
 quit;
 title;
 
-title "close in btcusd16_F ";
+title "close in btcusd16";
 proc sql;
     select
          min(Close) as min
         ,max(Close) as max
-        ,mean(Close) as max
-        ,median(Close) as max
+        ,mean(Close) as mean
+        ,median(Close) as median
         ,nmiss(Close) as missing
     from
-        btcusd16_F
+        btcusd16
     ;
 quit;
 title;
 
-title "valume in btcusd16_F ";
+title "volume in btcusd16";
 proc sql;
     select
          min(Volume) as min
         ,max(Volume) as max
-        ,mean(Volume) as max
-        ,median(Volume) as max
+        ,mean(Volume) as mean
+        ,median(Volume) as median
         ,nmiss(Volume) as missing
     from
-        btcusd16_F
+        btcusd16
     ;
 quit;
 title;
 
 
-title "open in btcusd17_F ";
+title "open in btcusd17";
 proc sql;
     select
          min(Open) as min
         ,max(Open) as max
-        ,mean(Open) as max
-        ,median(Open) as max
+        ,mean(Open) as mean
+        ,median(Open) as median
         ,nmiss(Open) as missing
     from
-        btcusd17_F
+        btcusd17
     ;
 quit;
 title;
 
-title "High in btcusd17_F ";
+title "High in btcusd17";
 proc sql;
     select
          min(High) as min
         ,max(High) as max
-        ,mean(High) as max
-        ,median(High) as max
+        ,mean(High) as mean
+        ,median(High) as median
         ,nmiss(High) as missing
     from
-        btcusd17_F
+        btcusd17
     ;
 quit;
 title;
 
-title "Low in btcusd17_F ";
+title "Low in btcusd17";
 proc sql;
     select
          min(Low) as min
         ,max(Low) as max
-        ,mean(Low) as max
-        ,median(Low) as max
+        ,mean(Low) as mean
+        ,median(Low) as median
         ,nmiss(Low) as missing
     from
-        btcusd17_F
+        btcusd17
     ;
 quit;
 title;
 
-title "Close in btcusd17_F ";
+title "Close in btcusd17";
 proc sql;
     select
          min(Close) as min
         ,max(Close) as max
-        ,mean(Close) as max
-        ,median(Close) as max
+        ,mean(Close) as mean
+        ,median(Close) as median
         ,nmiss(Close) as missing
     from
-        btcusd17_F
+        btcusd17
     ;
 quit;
 title;
 
-title "Volume in btcusd17_F ";
+title "Volume in btcusd17";
 proc sql;
     select
          min(Volume) as min
         ,max(Volume) as max
-        ,mean(Volume) as max
-        ,median(Volume) as max
+        ,mean(Volume) as mean
+        ,median(Volume) as median
         ,nmiss(Volume) as missing
     from
-        btcusd17_F
+        btcusd17
     ;
 quit;
 title;
 
-title "open in btcusd18_F ";
+title "open in btcusd18";
 proc sql;
     select
          min(Open) as min
         ,max(Open) as max
-        ,mean(Open) as max
-        ,median(Open) as max
+        ,mean(Open) as mean
+        ,median(Open) as median
         ,nmiss(Open) as missing
     from
-        btcusd18_F
+        btcusd18
     ;
 quit;
 title;
 
-title "High in btcusd18_F ";
+title "High in btcusd18";
 proc sql;
     select
          min(High) as min
         ,max(High) as max
-        ,mean(High) as max
-        ,median(High) as max
+        ,mean(High) as mean
+        ,median(High) as median
         ,nmiss(High) as missing
     from
-        btcusd18_F
+        btcusd18
     ;
 quit;
 title;
 
-title "Low in btcusd18_F ";
+title "Low in btcusd18";
 proc sql;
     select
          min(Low) as min
         ,max(Low) as max
-        ,mean(Low) as max
-        ,median(Low) as max
+        ,mean(Low) as mean
+        ,median(Low) as median
         ,nmiss(Low) as missing
     from
-        btcusd18_F
+        btcusd18
     ;
 quit;
 title;
 
-title "Close in btcusd18_F ";
+title "Close in btcusd18";
 proc sql;
     select
          min(Close) as min
         ,max(Close) as max
-        ,mean(Close) as max
-        ,median(Close) as max
+        ,mean(Close) as mean
+        ,median(Close) as median
         ,nmiss(Close) as missing
     from
-        btcusd18_F
+        btcusd18
     ;
 quit;
 title;
 
-title "Volume in btcusd18_F ";
+title "Volume in btcusd18";
 proc sql;
     select
          min(Volume) as min
         ,max(Volume) as max
-        ,mean(Volume) as max
-        ,median(Volume) as max
+        ,mean(Volume) as mean
+        ,median(Volume) as median
         ,nmiss(Volume) as missing
     from
-        btcusd18_F
+        btcusd18
     ;
 quit;
 title;
+*/
 
+* combine btcusd16, btcusd17 and btcusd18 horizontally using a data-step 
+match-merge;
+* note: After running the data step and proc sort step below several times
+  and averaging the fullstimer output in the system log, they tend to take
+  about 0.04 seconds of combined real time to execute and a maximum of
+  about 1.8 MB of memory (1100 KB for the data step vs. 1800 KB for the
+  proc sort step) on the computer they were tested on;
+data btcusd161718_v1;
+    retain
+        Date_ID
+        Open
+        High
+        Low
+        Close
+        Volume
+        MarketCap
+    ;
+    keep
+        Date_ID
+        Open
+        High
+        Low
+        Close
+        Volume
+        MarketCap
+    ;
+    merge
+        btcusd16
+        btcusd17
+        btcusd18
+    ;
+    by Date_ID
+    ;
+run;
+proc sort data=btcusd161718_v1;
+    by Date_ID;
+run;
+
+
+* combine btcusd16, btcusd17 and btcusd18 horizontally using proc sql;
+* note: After running the proc sql step below several times and averaging
+  the fullstimer output in the system log, they tend to take about 0.04
+  seconds of real time to execute and about 9 MB of memory on the computer
+  they were tested on. Consequently, the proc sql step appears to take roughly
+  the same amount of time to execute as the combined data step and proc sort
+  steps above, but to use roughly five times as much memory;
+* note to learners: Based upon these results, the proc sql step is preferable
+  if memory performance is not critical. This is because less code is required,
+  so it is faster to write and verify correct output has been obtained;
+proc sql;
+    create table btcusd161718_v2 as
+        select
+             coalesce(A.Date_ID,B.Date_ID,C.Date_ID) as Date_ID
+            ,coalesce(A.Open,B.Open,C.Open) as Open
+            ,coalesce(A.High,B.High,C.High) as High
+            ,coalesce(A.Low,B.Low,C.Low) as Low
+            ,coalesce(A.Close,B.Close,C.Close) as Close
+            ,coalesce(A.Volume,B.Volume,C.Volume) as Volumn
+            ,coalesce(A.MarketCap,B.MarketCap,C.MarketCap) as MarketCap
+        from
+            btcusd16 as A
+            full join
+            btcusd17 as B
+            on A.Date_ID=B.Date_ID
+            full join
+            btcusd18 as C
+            on B.Date_ID=C.Date_ID
+        order by
+            Date_ID
+    ;
+quit;
+
+
+* verify that btcusd161718_v1 and btcusd161718_v2 are identical;
+proc compare
+        base=btcusd161718_v1
+        compare=btcusd161718_v2
+        novalues
+    ;
+run;
 
 

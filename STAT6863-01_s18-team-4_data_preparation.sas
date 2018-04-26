@@ -242,7 +242,7 @@ proc sql;
 quit;
 
 * inspect columns of interest in cleaned versions of datasets;
-
+/*
 title "open in btcusd16";
 proc sql;
     select
@@ -453,7 +453,7 @@ proc sql;
     ;
 quit;
 title;
-
+*/
 
 * combine btcusd16, btcusd17 and btcusd18 horizontally using a data-step 
 match-merge;

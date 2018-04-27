@@ -462,6 +462,18 @@ match-merge;
   about 0.04 seconds of combined real time to execute and a maximum of
   about 1.8 MB of memory (1100 KB for the data step vs. 1800 KB for the
   proc sort step) on the computer they were tested on;
+proc sort data=btcusd16;
+	by Date_ID;
+run;
+
+proc sort data=btcusd17;
+	by Date_ID;
+run;
+
+proc sort data=btcusd18;
+	by Date_ID;
+run;
+
 data btcusd161718_v1;
     retain
         Date_ID
@@ -507,33 +519,53 @@ run;
 proc sql;
     create table btcusd161718_v2 as
         select
-             coalesce(A.Date_ID,B.Date_ID,C.Date_ID) as Date_ID
-            ,coalesce(A.Open,B.Open,C.Open) as Open
-            ,coalesce(A.High,B.High,C.High) as High
-            ,coalesce(A.Low,B.Low,C.Low) as Low
-            ,coalesce(A.Close,B.Close,C.Close) as Close
-            ,coalesce(A.Volume,B.Volume,C.Volume) as Volumn
-            ,coalesce(A.MarketCap,B.MarketCap,C.MarketCap) as MarketCap
+             coalesce(A.Date_ID,B.Date_ID) as Date_ID
+            ,coalesce(A.Open,B.Open) as Open
+            ,coalesce(A.High,B.High) as High
+            ,coalesce(A.Low,B.Low) as Low
+            ,coalesce(A.Close,B.Close) as Close
+            ,coalesce(A.Volume,B.Volume) as Volumn
+            ,coalesce(A.MarketCap,B.MarketCap) as MarketCap
         from
             btcusd16 as A
             full join
             btcusd17 as B
             on A.Date_ID=B.Date_ID
+        order by
+            Date_ID
+    ;
+quit;
+proc sql;
+    create table btcusd161718_v3 as
+        select
+             coalesce(A.Date_ID,B.Date_ID) as Date_ID
+            ,coalesce(A.Open,B.Open) as Open
+            ,coalesce(A.High,B.High) as High
+            ,coalesce(A.Low,B.Low) as Low
+            ,coalesce(A.Close,B.Close) as Close
+            ,coalesce(A.Volumn,B.Volume) as Volumn
+            ,coalesce(A.MarketCap,B.MarketCap) as MarketCap
+        from
+            btcusd161718_v2 as A
             full join
-            btcusd18 as C
-            on B.Date_ID=C.Date_ID
+            btcusd18 as B
+            on A.Date_ID=B.Date_ID
         order by
             Date_ID
     ;
 quit;
 
-
-* verify that btcusd161718_v1 and btcusd161718_v2 are identical;
+* verify that btcusd161718_v1 and btcusd161718_v3 are identical;
 proc compare
         base=btcusd161718_v1
-        compare=btcusd161718_v2
+        compare=btcusd161718_v3
         novalues
     ;
 run;
 
+*Removing blank rows from dataset. Use this merge file for analysis;
+data btcusd161718_v4;
+	set btcusd161718_v3;
+	if missing(Date_ID) then delete;
+run; 
 

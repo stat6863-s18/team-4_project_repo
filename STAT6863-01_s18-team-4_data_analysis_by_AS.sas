@@ -32,8 +32,7 @@ data neither does it attempt to validate data in any way.
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: What are the top 5 highest prices and  lowest prices between this time 
-period?
+Question: What are the top 5 highest prices between this time period?
 
 Rationale: This would help provide more insight into how cryptocurrency fared
 
@@ -43,6 +42,25 @@ from btcusd17 and btcusd18.
 Limitations: This methodology does not account for datasets with missing 
 data neither does it attempt to validate data in any way.
 ;
+
+proc sort
+    data=btcusd161718_v2
+    out=btcusd161718_v2_print1
+    ;
+    by descending High;
+run;
+
+proc print
+    noobs
+    data=btcusd161718_v2_print1(obs=5)
+    ;
+    id
+        Date_ID
+    ;
+    var
+        High
+    ;
+run;
 
 
 *******************************************************************************;
@@ -61,3 +79,21 @@ Limitations: This methodology does not account for datasets with missing
 data neither does it attempt to validate data in any way.
 ;
 
+proc sort
+    data=btcusd161718_v2
+    out=btcusd161718_v2_print2
+    ;
+    by Low;
+run;
+
+proc print
+    noobs
+    data=btcusd161718_v2_print2(obs=5)
+    ;
+    id
+        Date_ID
+    ;
+    var
+        Low
+    ;
+run;

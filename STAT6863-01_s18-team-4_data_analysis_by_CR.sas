@@ -28,6 +28,49 @@ limitations: Value of zero on in any column should exclude for comparison.
 otherwise it will be misleading value for open or close.
 ;
 
+*Calculating difference of open and close;
+proc sql;
+	create table btcusd161718_v3 as
+		select 
+			Date_ID
+			,Open
+			,Close
+			,Open-Close as diff_open_Close
+		from 
+			btcusd161718_v2
+
+	;
+quit;
+
+*Formatting Date_id;
+
+DATA 
+	btcusd161718_v4;
+	SET btcusd161718_v3;
+	Date_ID = INPUT(PUT(Date_ID,8.),YYMMDD8.);
+	year = YEAR(Date_ID);
+	FORMAT Date_ID yymmdd10.;
+RUN;
+
+*Contents of data;
+proc contents 
+	data= btcusd161718_v4;
+run;
+
+*Summary of Data for years;
+proc means 
+	data = btcusd161718_v4 n mean max min range std
+	;
+	class
+		year
+	;
+	var
+		diff_open_Close
+		Open
+		Close
+	;
+		
+run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;

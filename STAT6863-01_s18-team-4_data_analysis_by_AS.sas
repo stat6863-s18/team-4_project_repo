@@ -55,7 +55,7 @@ proc print
     data=btcusd161718_v2_print1(obs=5)
     ;
     id
-        Date_ID
+        Date
     ;
     var
         High
@@ -91,7 +91,7 @@ proc print
     data=btcusd161718_v2_print2(obs=5)
     ;
     id
-        Date_ID
+        Date
     ;
     var
         Low

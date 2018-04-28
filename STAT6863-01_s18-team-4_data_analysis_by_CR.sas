@@ -32,7 +32,7 @@ otherwise it will be misleading value for open or close.
 proc sql;
 	create table btcusd161718_v3 as
 		select 
-			Date_ID
+			Date
 			,Open
 			,Close
 			,Open-Close as diff_open_Close
@@ -42,14 +42,14 @@ proc sql;
 	;
 quit;
 
-*Formatting Date_id;
+*Formatting Date;
 
 DATA 
 	btcusd161718_v4;
 	SET btcusd161718_v3;
-	Date_ID = INPUT(PUT(Date_ID,8.),YYMMDD8.);
-	year = YEAR(Date_ID);
-	FORMAT Date_ID yymmdd10.;
+	Date = INPUT(PUT(Date,8.),YYMMDD8.);
+	year = YEAR(Date);
+	FORMAT Date yymmdd10.;
 RUN;
 
 *Contents of data;

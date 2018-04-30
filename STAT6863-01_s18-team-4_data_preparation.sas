@@ -232,18 +232,19 @@ proc sql;
     ;
 quit;
 
-/* inspect columns of interest in cleaned versions of datasets;
-title "Inspect Market Cap in btcusd16";
-proc sql;
-    select
-         min(put(marketcap,dollar16.)) as min
-        ,max(put(marketcap,dollar16.)) as max
-        ,mean(marketcap) as mean
-        ,median(marketcap) as median
-        ,nmiss(put(marketcap,dollar16.)) as missing
-    from
-        btcusd16
-    ;
+* inspect columns of interest in cleaned versions of datasets;
+    /*
+    title "Inspect Market Cap in btcusd16";
+    proc sql;
+        select
+            min(put(marketcap,dollar16.)) as min
+           ,max(put(marketcap,dollar16.)) as max
+           ,mean(marketcap) as mean
+           ,median(marketcap) as median
+           ,nmiss(put(marketcap,dollar16.)) as missing
+        from
+            btcusd16
+        ;
 quit;
 title;
 
@@ -277,7 +278,12 @@ title;
 */
 
 * combine btcusd16, btcusd17 and btcusd18 horizontally using a data-step 
-match-merge;
+  match-merge;
+* note: After running the data step and proc sort step below several times
+  and averaging the fullstimer output in the system log, it takes about
+  0.02 seconds of combined real time to execute the codes and a maximum of
+  about 1.9 MB of memory (1168 KB for the data step vs. 697 KB for the
+  proc sort step) on the computer they were tested on;
 
 data btcusd161718_v1;
     retain
@@ -314,6 +320,17 @@ run;
 
 
 * combine btcusd16, btcusd17 and btcusd18 horizontally using proc sql;
+* note: After running the proc sql step below several times and averaging
+  the fullstimer output in the system log, it takes about 0.04 seconds
+  of combined real time to execute the codes and a maximum of about 
+  9 MB of memory on the computer they were tested on. It turns out that 
+  the proc sql step appears to take roughly the same amount of time 
+  to execute as the combined data step and proc sort steps above, but to 
+  use roughly five times as much memory;
+* note: Based upon these results, the proc sql step is preferable
+  if memory performance isn't critical. This is because less code is 
+  required, so it's faster to write and verify correct output has been 
+  obtained;
 
 proc sql;
     create table btcusd161718_v2 as
@@ -346,3 +363,4 @@ proc compare
         novalues
     ;
 run;
+

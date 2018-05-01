@@ -5,17 +5,23 @@
 
 * 
 [Dataset 1 Name] btcusd16
+
 [Dataset Description] Historical data for Bitcoin BTC from April 7, 2015 to 
 April 6, 2016
+
 [Experimental Unit Description] Details of historical data for Bitcoin BTC from 
 April 7, 2015 to April 6, 2016 such as open, close, high, low prices, plus some 
 basic calculations to measure the differences and percentage changes in a day.
+
 [Number of Observations] 367
                     
 [Number of Features] 13
+
 [Data Source] https://coinmarketcap.com/currencies/bitcoin/historical-data/
 ?start=20150407&end=20160406 was downloaded and edited to produce file btcusd16
+
 [Data Dictionary] https://coinmarketcap.com/currencies/bitcoin/historical-data/
+
 [Unique ID Schema] The column Date_ID is the primary, unique ID.
 ;
 %let inputDataset1DSN = btcusd16_raw;
@@ -26,17 +32,23 @@ https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd16.xlsx?r
 
 *
 [Dataset 2 Name] btcusd17
+
 [Dataset Description] Historical data for Bitcoin BTC from April 7, 2016 to 
 April 6, 2017
+
 [Experimental Unit Description] Details of historical data for Bitcoin BTC from 
 April 7, 2015 to April 6, 2016 such as open, close, high, low prices, plus some 
 basic calculations to measure the differences and percentage changes in a day.
+
 [Number of Observations] 367
                     
 [Number of Features] 13
+
 [Data Source] https://coinmarketcap.com/currencies/bitcoin/historical-data/
 ?start=20160407&end=20170406 was downloaded and edited to produce file btcusd17
+
 [Data Dictionary] https://coinmarketcap.com/currencies/bitcoin/historical-data/
+
 [Unique ID Schema] The column Date_ID is the primary, unique ID.
 ;
 %let inputDataset2DSN = btcusd17_raw;
@@ -48,16 +60,22 @@ https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd17.xlsx?r
 
 *
 [Dataset 3 Name] btcusd18
+
 [Dataset Description] Historical data for Bitcoin BTC from April 7, 2017 to April 6, 2018
+
 [Experimental Unit Description] Details of historical data for Bitcoin BTC from 
 April 7, 2015 to April 6, 2016 such as open, close, high, low prices, plus some 
 basic calculations to measure the differences and percentage changes in a day.
+
 [Number of Observations] 367
                     
 [Number of Features] 13
+
 [Data Source] https://coinmarketcap.com/currencies/bitcoin/historical-data/
 ?start=20170407&end=20180406 was downloaded and edited to produce file btcusd18
+
 [Data Dictionary] https://coinmarketcap.com/currencies/bitcoin/historical-data/
+
 [Unique ID Schema] The column Date_ID is the primary, unique ID.
 ;
 %let inputDataset3DSN = btcusd18_raw;

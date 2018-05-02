@@ -26,7 +26,8 @@ basic calculations to measure the differences and percentage changes in a day.
 ;
 %let inputDataset1DSN = btcusd16_raw;
 %let inputDataset1URL =
-https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd16.xlsx?raw=true;
+https://github.com/stat6863/team-4_project_repo/blob/master/data/btcusd16.xlsx?raw=true
+;
 %let inputDataset1Type = XLSX;
 
 
@@ -300,7 +301,7 @@ title;
 * note: After running the data step and proc sort step below several times
   and averaging the fullstimer output in the system log, it takes about
   0.02 seconds of combined real time to execute the codes and a maximum of
-  about 1.9 MB of memory (1168 KB for the data step vs. 697 KB for the
+  about 1.1 MB of memory (1168 KB for the data step vs. 269 KB for the
   proc sort step) on the computer they were tested on;
 
 data btcusd161718_v1;

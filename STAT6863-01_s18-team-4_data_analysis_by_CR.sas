@@ -86,6 +86,31 @@ another axis of table btcusd16, btcusd17 and from btcusd18.
 
 Limitations: Zeros in the volume column should be excluded for plot.
 ;
+*Formatting Date for Analysis because the colume of month is not in the data prep file.
+;
+DATA 
+	btcusd16_17_18_v3;
+	SET btcusd16_17_18_v2;
+	Date = INPUT(PUT(Date_ID,8.),YYMMDD8.);
+	year = YEAR(Date);
+	Month = Month(Date);
+	FORMAT Date yymmdd10.;
+RUN;
+
+*Select total volume for year 2016,2017 and 2018 with respect to month;
+proc sql;
+	create table btcusd16_17_18_v4 as
+		select 
+			Year
+			,Month
+			,sum(Volume) as Total_volume
+		from 
+			btcusd16_17_18_v3
+		group by
+			Month
+			,Year
+    ;
+quit;
 
 
 *******************************************************************************;
@@ -103,3 +128,14 @@ are close, open, High, Low, volume, Market cap column.
 
 Limitations: Model assumptions should be valid for prediction.
 ;
+
+*Creating SQL data table for model preparation;
+proc sql;
+	create table btcusd16_17_18_analysis_table as
+		select 
+			Date_ID
+			,Close 
+		from 
+			btcusd16_17_18_v3
+    ;
+quit;

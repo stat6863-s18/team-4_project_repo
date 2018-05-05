@@ -43,22 +43,36 @@ Limitations: This methodology does not account for datasets with missing
 data neither does it attempt to validate data in any way.
 ;
 
-proc sort
-    data=btcusd161718_v2
-    out=btcusd161718_v2_print1
-    ;
-    by descending High;
-run;
+proc sql;
+    create table high_top5 as
+        select
+            Date
+            ,High format=dollar12.2
+        from
+            btcusd161718_v2
+        order by
+            High descending
+        ;
+    create table high_top5_print as
+        select
+            *
+        from
+            high_top5(obs=5)
+        ;
+quit;
+
 
 proc print
-    noobs
-    data=btcusd161718_v2_print1(obs=5)
+    data=high_top5_print
+    noobs style(header)={just=c}
     ;
     id
         Date
     ;
     var
         High
+    ;
+    title "Top 5 High's"
     ;
 run;
 
@@ -79,21 +93,35 @@ Limitations: This methodology does not account for datasets with missing
 data neither does it attempt to validate data in any way.
 ;
 
-proc sort
-    data=btcusd161718_v2
-    out=btcusd161718_v2_print2
-    ;
-    by Low;
-run;
+proc sql;
+    create table low_bottom5 as
+        select
+            Date
+            ,High format=dollar12.2
+        from
+            btcusd161718_v2
+        order by
+            High
+        ;
+    create table low_bottom5_print as
+        select
+            *
+        from
+            low_bottom5(obs=5)
+        ;
+quit;
+
 
 proc print
-    noobs
-    data=btcusd161718_v2_print2(obs=5)
+    data=low_bottom5_print
+    noobs style(header)={just=c}
     ;
     id
         Date
     ;
     var
-        Low
+        High
+    ;
+    title "Bottom 5 Low's"
     ;
 run;

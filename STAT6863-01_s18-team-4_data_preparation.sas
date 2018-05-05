@@ -383,3 +383,137 @@ proc compare
     ;
 run;
 
+
+* combine btcusd16, btcusd17 and btcusd18 vertically using a data-step interweave,
+  combining composite key values into a single primary key value;
+* note: After running the data step and proc sort step below several times
+  and averaging the fullstimer output in the system log, they tend to take
+  about 0.05 seconds of combined "real time" to execute and a maximum of
+  about 1 MB of memory (1223 KB for the data step vs. 800 KB for the
+  proc sort step) on the computer they were tested on;
+data btcusd16_17_18_v1;
+    retain
+	data_source
+        Date_ID
+        Open
+        High
+        Low
+        Close
+        Volume
+        MarketCap
+    ;
+    keep
+        data_source
+        Date_ID
+        Open
+        High
+        Low
+        Close
+        Volume
+        MarketCap	   
+    ;
+    set
+        btcusd16(in=ay2016_data_row)
+        btcusd17(in=ay2017_data_row)
+	btcusd18(in=ay2018_data_row)
+    ;
+    if
+        ay2016_data_row=1
+    then
+        do;
+            data_source="2016";
+        end;
+    if  
+        ay2017_data_row=1
+    then
+        do;
+            data_source="2017";
+        end;
+    if 
+    	   ay2018_data_row=1
+    then
+    	   do;
+	      data_source="2018";
+	   end;
+run;
+proc sort data=btcusd16_17_18_v1;
+    by Date_ID;
+run;
+
+
+* combine btcusd16, btcusd17 and btcusd18 vertically using proc sql;
+* note: After running the proc sql step below several times and averaging
+  the fullstimer output in the system log, they tend to take about 0.09
+  seconds of "real time" to execute and about 5 MB of memory on the computer
+  they were tested on. Consequently, the proc sql step appears to take roughly
+  half as much time to execute as the combined data step and proc sort steps
+  above, but to use slightly more memory;
+* note to learners: Based upon these results, the proc sql step is preferable
+  if memory performance isn't critical. This is because less code is required,
+  so it's faster to write and verify correct output has been obtained. In
+  addition, because proc sql doesn't create a PDV with the length of each
+  column determined by the column's first appearance, less care is needed for
+  issues like columns lengths being different in the input datasets;
+proc sql;
+    create table btcusd16_17_18_v2 as
+        (
+            select
+                 "2016"
+                  AS
+                  data_source
+		 ,Date_ID
+		 ,Open
+		 ,High
+	         ,Low
+		 ,Close
+		 ,Volume
+		 ,MarketCap
+            from
+                btcusd16
+        )
+        outer union corr
+        (
+            select
+                 "2017"
+                  AS
+                  data_source
+		 ,Date_ID
+		 ,Open
+		 ,High
+	         ,Low
+		 ,Close
+		 ,Volume
+		 ,MarketCap
+            from
+                btcusd17
+        )
+	   outer union corr
+        (
+            select
+                 "2018"
+                  AS
+                  data_source
+		 ,Date_ID
+		 ,Open
+		 ,High
+	         ,Low
+		 ,Close
+		 ,Volume
+		 ,MarketCap
+            from
+                btcusd18
+        )
+        order by
+             Date_ID
+    ;
+quit;
+
+
+* verify that btcusd16_17_18_v1 and btcusd16_17_18_v2 are
+  identical;
+proc compare
+        base=btcusd16_17_18_v1
+        compare=btcusd16_17_18_v2
+        novalues
+    ;
+run;

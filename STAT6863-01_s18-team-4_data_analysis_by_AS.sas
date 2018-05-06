@@ -15,7 +15,7 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: What is the marcket cap of Bitcoin BTC from April 2016 to April 2018?
+Question: What is the top 5 market cap of Bitcoin BTC from April 2016 to April 2018?
 
 Rationale: This will help identify the market cap  of Bitcoin as compared to 
 other cryptocurrency
@@ -26,6 +26,39 @@ name column from btcusd17 and btcusd18
 Limitations: This methodology does not account for datasets with missing 
 data neither does it attempt to validate data in any way.
 ;
+
+proc sql;
+    create table Market_Cap_top5 as
+        select
+            Date
+            ,MarketCap format=dollar12.2
+        from
+            btcusd161718_v2
+        order by
+            MarketCap descending
+        ;
+    create table MarketCap_top5_print as
+        select
+            *
+        from
+            Market_Cap_top5(obs=5)
+        ;
+quit;
+
+
+proc print
+    data=MarketCap_top5_print
+    noobs style(header)={just=c}
+    ;
+    id
+        Date
+    ;
+    var
+        MarketCap
+    ;
+    title "Top 5 Market Cap"
+    ;
+run;
 
 
 *******************************************************************************;

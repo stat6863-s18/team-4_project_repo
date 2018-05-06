@@ -57,8 +57,10 @@ run;
 /** remove $ sign from N which is the sample size **/;
 data analysis;
     set btcusd161718_v2_temp;
-        array nValue[3] High Close MarketCap;      /* numerical variables */
-        array cValue[3] $16.;                      /* cValue[i] is formatted version of nValue[i] */
+        array nValue[3] High Close MarketCap;      
+	/* numerical variables */
+        array cValue[3] $16.;                      
+	/* cValue[i] is formatted version of nValue[i] */
 		label cValue1="High" cValue2="Close" cValue3="MarketCap";
  
 do i = 1 to dim(nValue);

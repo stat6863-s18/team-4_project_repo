@@ -57,8 +57,10 @@ run;
 /** remove $ sign from N which is the sample size **/;
 data analysis;
     set btcusd161718_v2_temp;
-        array nValue[3] High Close MarketCap;      /* numerical variables */
-        array cValue[3] $16.;                      /* cValue[i] is formatted version of nValue[i] */
+        array nValue[3] High Close MarketCap;      
+	/* numerical variables */
+        array cValue[3] $16.;                      
+	/* cValue[i] is formatted version of nValue[i] */
 		label cValue1="High" cValue2="Close" cValue3="MarketCap";
  
 do i = 1 to dim(nValue);
@@ -190,17 +192,17 @@ by looking at a trend line and linear regression.
 
 /** Fibnonacci Retracement and golden ratio **/;
 proc sql;
-	create table pred_highfromlow as
-		select
-			Date
-			,High
-			,Low
-			,HighvsLow
-			,HighvsLow * 0.618 + Low as ResistantLevel format=dollar12.2
-			,HighvsLow * 0.382 + Low as SupportLevel format=dollar12.2
-		from
-			btcusd161718_v2
-		;
+    create table pred_highfromlow as
+        select
+	    Date
+	    ,High
+	    ,Low
+	    ,HighvsLow
+	    ,HighvsLow * 0.618 + Low as ResistantLevel format=dollar12.2
+	    ,HighvsLow * 0.382 + Low as SupportLevel format=dollar12.2
+        from
+	    btcusd161718_v2
+    ;
 quit;
 
 proc print 

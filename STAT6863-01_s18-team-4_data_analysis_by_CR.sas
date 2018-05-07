@@ -45,7 +45,7 @@ quit;
 
 data 
     btcusd161718_v4;
-    est btcusd161718_v3;	
+    set btcusd161718_v3;	
     Date = input(put(Date,8.),YYMMDD8.);
     Year = year(Date);
     format Date yymmdd10.;

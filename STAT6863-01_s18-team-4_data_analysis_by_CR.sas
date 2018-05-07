@@ -30,46 +30,44 @@ otherwise it will be misleading value for open or close.
 
 *Calculating difference of open and close;
 proc sql;
-	create table btcusd161718_v3 as
-		select 
-			Date
-			,Open
-			,Close
-			,Open-Close as diff_open_Close
-		from 
-			btcusd161718_v2
-
-	;
+    create table btcusd161718_v3 as
+        select 
+	    Date
+	    ,Open
+	    ,Close
+	    ,Open-Close as diff_open_Close
+	from 
+	    btcusd161718_v2
+        ;
 quit;
 
 *Formatting Date;
 
 DATA 
-	btcusd161718_v4;
-	SET btcusd161718_v3;
-	Date = INPUT(PUT(Date,8.),YYMMDD8.);
-	year = YEAR(Date);
-	FORMAT Date yymmdd10.;
+    btcusd161718_v4;
+    SET btcusd161718_v3;	
+    Date = INPUT(PUT(Date,8.),YYMMDD8.);
+    year = YEAR(Date);
+    FORMAT Date yymmdd10.;
 RUN;
 
 *Contents of data;
 proc contents 
-	data= btcusd161718_v4;
+    data= btcusd161718_v4;
 run;
 
 *Summary of Data for years;
 proc means 
-	data = btcusd161718_v4 n mean max min range std
-	;
-	class
-		year
-	;
-	var
-		diff_open_Close
-		Open
-		Close
-	;
-		
+    data = btcusd161718_v4 n mean max min range std
+    ;
+    class
+        year
+    ;
+    var
+        diff_open_Close
+	Open
+	Close
+    ;
 run;
 
 *******************************************************************************;
@@ -89,27 +87,27 @@ Limitations: Zeros in the volume column should be excluded for plot.
 *Formatting Date for Analysis because the colume of month is not in the data prep file.
 ;
 DATA 
-	btcusd16_17_18_v3;
-	SET btcusd16_17_18_v2;
-	Date = INPUT(PUT(Date_ID,8.),YYMMDD8.);
-	year = YEAR(Date);
-	Month = Month(Date);
-	FORMAT Date yymmdd10.;
+    btcusd16_17_18_v3;
+    SET btcusd16_17_18_v2;
+    Date = INPUT(PUT(Date_ID,8.),YYMMDD8.);
+    year = YEAR(Date);
+    Month = Month(Date);
+    FORMAT Date yymmdd10.;
 RUN;
 
 *Select total volume for year 2016,2017 and 2018 with respect to month;
 proc sql;
-	create table btcusd16_17_18_v4 as
-		select 
-			Year
-			,Month
-			,sum(Volume) as Total_volume
-		from 
-			btcusd16_17_18_v3
-		group by
-			Month
-			,Year
-    ;
+    create table btcusd16_17_18_v4 as
+        select 
+	    Year
+	    ,Month
+	    ,sum(Volume) as Total_volume
+	from 
+	    btcusd16_17_18_v3
+	group by
+	    Month
+	    ,Year
+        ;
 quit;
 
 
@@ -131,11 +129,11 @@ Limitations: Model assumptions should be valid for prediction.
 
 *Creating SQL data table for model preparation;
 proc sql;
-	create table btcusd16_17_18_analysis_table as
-		select 
-			Date_ID
-			,Close 
-		from 
-			btcusd16_17_18_v3
-    ;
+    create table btcusd16_17_18_analysis_table as
+        select 
+	    Date_ID
+	    ,Close 
+	from 
+	    btcusd16_17_18_v3
+        ;
 quit;

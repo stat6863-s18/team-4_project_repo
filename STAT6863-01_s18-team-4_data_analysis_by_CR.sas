@@ -35,7 +35,7 @@ proc sql;
 	    Date
 	    ,Open
 	    ,Close
-	    ,Open-Close as diff_open_Close
+	    ,Open-Close as Diff_open_Close
 	from 
 	    btcusd161718_v2
         ;
@@ -43,13 +43,13 @@ quit;
 
 *Formatting Date;
 
-DATA 
+data 
     btcusd161718_v4;
-    SET btcusd161718_v3;	
-    Date = INPUT(PUT(Date,8.),YYMMDD8.);
-    year = YEAR(Date);
-    FORMAT Date yymmdd10.;
-RUN;
+    set btcusd161718_v3;	
+    Date = input(put(Date,8.),YYMMDD8.);
+    Year = year(Date);
+    format Date yymmdd10.;
+run;
 
 *Contents of data;
 proc contents 
@@ -61,10 +61,10 @@ proc means
     data = btcusd161718_v4 n mean max min range std
     ;
     class
-        year
+        Year
     ;
     var
-        diff_open_Close
+        Diff_open_Close
 	Open
 	Close
     ;
@@ -86,14 +86,14 @@ Limitations: Zeros in the volume column should be excluded for plot.
 ;
 *Formatting Date for Analysis because the colume of month is not in the data prep file.
 ;
-DATA 
+data 
     btcusd16_17_18_v3;
-    SET btcusd16_17_18_v2;
-    Date = INPUT(PUT(Date_ID,8.),YYMMDD8.);
-    year = YEAR(Date);
+    set btcusd16_17_18_v2;
+    Date = input(put(Date_ID,8.),YYMMDD8.);
+    Year = YEAR(Date);
     Month = Month(Date);
-    FORMAT Date yymmdd10.;
-RUN;
+    format Date yymmdd10.;
+run;
 
 *Select total volume for year 2016,2017 and 2018 with respect to month;
 proc sql;

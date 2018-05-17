@@ -8,7 +8,8 @@
 X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILENAME))))""";
 
 
-* load external file that will generate final analytic file; 
+* load external file generating "analytic file" dataset btc_analytic_file,
+from which all data analyses below begin;
 %include '.\STAT6863-01_s18-team-4_data_preparation.sas';
 
 
@@ -17,12 +18,9 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 *******************************************************************************;
 *
 Question: What is the distribution of Bitcoin BTC from April 2016 to present?
-
-Rationale: This should help identify the specific distribution of BTC'
-
+Rationale: This should help identify the specific distribution of BTC
 Note: This compares the column the column "Close" from btcusd16 to the same
 name column from btcusd17 and btcusd18.
-
 Limitations: This methodology does not account for any datasets with missing 
 data nor does it attempt to validate data in any way.
 ;
@@ -30,7 +28,7 @@ data nor does it attempt to validate data in any way.
 /** distribution **/;
 ods graphics on;
 proc univariate
-    data=btcusd161718_v2;
+    data=btc_analytic_file;
     var High;
     histogram High;
 run;
@@ -39,7 +37,7 @@ quit;
 proc means
         min max mean std
         noprint 
-        data=btcusd161718_v2
+        data=btc_analytic_file
     ;
     var
         High
@@ -47,21 +45,21 @@ proc means
         MarketCap
     ;
     output
-        out=btcusd161718_v2_temp(drop=_type_ _freq_
-                                rename=(_stat_ = STAT)
-                                )
+        out=btc_analytic_file_temp(drop=_type_ _freq_
+                                  rename=(_stat_ = STAT)
+                                  )
     ;
 run;
 
 
 /** remove $ sign from N which is the sample size **/;
 data analysis;
-    set btcusd161718_v2_temp;
+    set btc_analytic_file_temp;
         array nValue[3] High Close MarketCap;      
-	/* numerical variables */
+        /* numerical variables */
         array cValue[3] $16.;                      
-	/* cValue[i] is formatted version of nValue[i] */
-		label cValue1="High" cValue2="Close" cValue3="MarketCap";
+        /* cValue[i] is formatted version of nValue[i] */
+        label cValue1="High" cValue2="Close" cValue3="MarketCap";
  
 do i = 1 to dim(nValue);
     select (STAT);
@@ -80,8 +78,8 @@ proc print
     var STAT
         cValue:
         /style(data)={just=r}
-	;
-	title 'INSPECT HIGH-CLOSE-MARKET CAP FROM 2016 TO 2018';
+    ;
+    title 'INSPECT HIGH-CLOSE-MARKET CAP FROM 2016 TO 2018';
 run;
 
 
@@ -91,13 +89,10 @@ run;
 *
 Question: What are the top 10 highest prices and top 10 lowest prices during 
 these years?
-
 Rationale: This would provide more BTC behaviors, movements and have a better 
 insights why there are such changes.
-
 Note: This compares the column the column "High" and "Low" from btcusd16 to the 
 same name columns from btcusd17 and btcusd18.
-
 Limitations: This methodology does not account for any datasets with missing 
 data nor does it attempt to validate data in any way.
 ;
@@ -108,7 +103,7 @@ proc sql;
             Date
             ,High format=dollar12.2
         from
-            btcusd161718_v2
+            btc_analytic_file
         order by
             High descending
         ;
@@ -143,11 +138,11 @@ proc sql;
             Date
             ,High format=dollar12.2
         from
-            btcusd161718_v2
+            btc_analytic_file
         order by
             High
         ;
-    create table high_top10_print as
+    create table high_bottom10_print as
         select
             *
         from
@@ -176,15 +171,12 @@ run;
 *******************************************************************************;
 *
 Question: What are major corrections in Bitcoin history?
-
 Rationale: This would provide more true understanding of a few major corrections 
 in the past and use those outputs to forecast or predict the BTC price for the 
 year of 2018.
-
 Note: This compares the column the column "Date_ID" and "Low" from btcusd16 to 
 the same name columns from btcusd17 and btcusd18 to find a reverse movement 
 which is usually negative, and any resistance and support levels.
-
 Limitations: Even though predictive modeling is specified in the research
 questions, this methodology solely relies on a crude descriptive technique
 by looking at a trend line and linear regression.
@@ -194,14 +186,14 @@ by looking at a trend line and linear regression.
 proc sql;
     create table pred_highfromlow as
         select
-	    Date
-	    ,High
-	    ,Low
-	    ,HighvsLow
-	    ,HighvsLow * 0.618 + Low as ResistantLevel format=dollar12.2
-	    ,HighvsLow * 0.382 + Low as SupportLevel format=dollar12.2
+            Date
+            ,High
+            ,Low
+            ,High - Low as HighvsLow
+            ,(High - Low) * 0.618 + Low as ResistantLevel format=dollar12.2
+            ,(High - Low) * 0.382 + Low as SupportLevel format=dollar12.2
         from
-	    btcusd161718_v2
+            btc_analytic_file
     ;
 quit;
 
@@ -260,4 +252,3 @@ proc reg
     plot residual. * predicted.;
 run;
 quit;
-

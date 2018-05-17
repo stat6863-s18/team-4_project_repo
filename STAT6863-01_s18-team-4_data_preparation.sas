@@ -296,6 +296,8 @@ quit;
 title;
 */
 
+/*
+
 * combine btcusd16, btcusd17 and btcusd18 horizontally using a data-step 
   match-merge;
 * note: After running the data step and proc sort step below several times
@@ -518,6 +520,7 @@ proc compare
     ;
 run;
 
+*/
 
 * build analytic dataset from raw datasets imported above, including only the
   columns and minimal data-cleaning/transformation needed to address each

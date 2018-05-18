@@ -133,7 +133,7 @@ Limitations: Model assumptions should be valid for prediction.
 proc sql;
     create table btc_analytic_file_table03 as
         select 
-	    Date_ID
+	    Date
 	    ,Close 
 	from 
 	    btc_analytic_file

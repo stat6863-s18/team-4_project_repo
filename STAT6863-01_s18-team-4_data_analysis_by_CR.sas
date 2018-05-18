@@ -52,6 +52,11 @@ data
     format Date yymmdd10.;
 run;
 
+* Scatter plot of open and closed price of Bitcoin by year;
+proc sgplot data = btc_analytic_file_data1;
+    scatter x = Open y = Close / group = Year;
+run;
+
 *Contents of data;
 proc contents 
     data= btc_analytic_file_data1;

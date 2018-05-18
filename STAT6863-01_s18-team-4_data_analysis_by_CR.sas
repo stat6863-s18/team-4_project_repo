@@ -144,3 +144,11 @@ proc sql;
 	    btc_analytic_file
         ;
 quit;
+
+* Creating time series plot;
+proc gplot data=btc_analytic_file_table03;
+    plot Date*Close = 1;
+    symbol1 v=star c=blue;
+    title "Time Series Plot";
+run;
+title;

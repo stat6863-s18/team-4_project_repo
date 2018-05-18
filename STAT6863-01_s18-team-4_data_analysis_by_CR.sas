@@ -4,7 +4,8 @@
 * (set window width to banner width to calibrate line length to 80 characters *;
 *******************************************************************************;
 
-* set relative file import path to current directory (using standard SAS trick);
+* load external file generating "analytic file" dataset btc_analytic_file, from
+which all data analyses below begin;
 X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILENAME))))""";
 
 
@@ -30,35 +31,40 @@ otherwise it will be misleading value for open or close.
 
 *Calculating difference of open and close;
 proc sql;
-    create table btcusd161718_v3 as
+    create table btc_analytic_file_table01 as
         select 
 	    Date
 	    ,Open
 	    ,Close
 	    ,Open-Close as Diff_open_Close
 	from 
-	    btcusd161718_v2
+	    btc_analytic_file
         ;
 quit;
 
 *Formatting Date;
 
 data 
-    btcusd161718_v4;
-    set btcusd161718_v3;	
+    btc_analytic_file_data1;
+    set btc_analytic_file_table01;	
     Date = input(put(Date,8.),YYMMDD8.);
     Year = year(Date);
     format Date yymmdd10.;
 run;
 
+* Scatter plot of open and closed price of Bitcoin by year;
+proc sgplot data = btc_analytic_file_data1;
+    scatter x = Open y = Close / group = Year;
+run;
+
 *Contents of data;
 proc contents 
-    data= btcusd161718_v4;
+    data= btc_analytic_file_data1;
 run;
 
 *Summary of Data for years;
 proc means 
-    data = btcusd161718_v4 n mean max min range std
+    data = btc_analytic_file_data1 n mean max min range std
     ;
     class
         Year
@@ -88,9 +94,9 @@ Limitations: Zeros in the volume column should be excluded for plot.
 *Formatting Date for Analysis because the colume of month is not in the data prep file.
 ;
 data 
-    btcusd16_17_18_v3;
-    set btcusd16_17_18_v2;
-    Date = input(put(Date_ID,8.),YYMMDD8.);
+    btc_analytic_file_data2;
+    set btc_analytic_file;
+    Date = input(put(Date,8.),YYMMDD8.);
     Year = YEAR(Date);
     Month = Month(Date);
     format Date yymmdd10.;
@@ -98,13 +104,13 @@ run;
 
 *Select total volume for year 2016,2017 and 2018 with respect to month;
 proc sql;
-    create table btcusd16_17_18_v4 as
+    create table btc_analytic_file_table02 as
         select 
 	    Year
 	    ,Month
-	    ,sum(Volume) as Total_volume
+	    ,sum(Volumn) as Total_volume
 	from 
-	    btcusd16_17_18_v3
+	    btc_analytic_file_data2
 	group by
 	    Month
 	    ,Year
@@ -130,11 +136,19 @@ Limitations: Model assumptions should be valid for prediction.
 
 *Creating SQL data table for model preparation;
 proc sql;
-    create table btcusd16_17_18_analysis_table as
+    create table btc_analytic_file_table03 as
         select 
-	    Date_ID
+	    Date
 	    ,Close 
 	from 
-	    btcusd16_17_18_v3
+	    btc_analytic_file
         ;
 quit;
+
+* Creating time series plot;
+proc gplot data=btc_analytic_file_table03;
+    plot Date*Close = 1;
+    symbol1 v=star c=blue;
+    title "Time Series Plot";
+run;
+title;

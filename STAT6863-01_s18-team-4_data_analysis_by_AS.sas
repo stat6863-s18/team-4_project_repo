@@ -7,7 +7,7 @@
 * set relative file import path to current directory (using standard SAS trick);
 X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILENAME))))""";
 
-* load external file that will generate final analytic file; 
+* load external file generating "analytic file" dataset btc_analytic_file, 
 %include '.\STAT6863-01_s18-team-4_data_preparation.sas';
 
 
@@ -33,7 +33,7 @@ proc sql;
             Date
             ,MarketCap format=dollar12.2
         from
-            btcusd161718_v2
+            btc_analytic_file
         order by
             MarketCap descending
         ;
@@ -82,7 +82,7 @@ proc sql;
             Date
             ,High format=dollar12.2
         from
-            btcusd161718_v2
+             btc_analytic_file
         order by
             High descending
         ;
@@ -132,7 +132,7 @@ proc sql;
             Date
             ,High format=dollar12.2
         from
-            btcusd161718_v2
+            btc_analytic_file
         order by
             High
         ;

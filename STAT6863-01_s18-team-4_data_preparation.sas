@@ -253,16 +253,16 @@ quit;
 
 * inspect columns of interest in cleaned versions of datasets;
     /*
-	    title "Inspect Market Cap in btcusd16";
-	    proc sql;
-		select
-		    min(put(marketcap,dollar16.)) as min
-		   ,max(put(marketcap,dollar16.)) as max
-		   ,mean(marketcap) as mean
-		   ,median(marketcap) as median
-		   ,nmiss(put(marketcap,dollar16.)) as missing
-		from
-		    btcusd16
+	title "Inspect Market Cap in btcusd16";
+	proc sql;
+	    select
+		 min(put(marketcap,dollar16.)) as min
+		,max(put(marketcap,dollar16.)) as max
+		,mean(marketcap) as mean
+		,median(marketcap) as median
+		,nmiss(put(marketcap,dollar16.)) as missing
+	    from
+		btcusd16
 		;
 	quit;
 	title;
@@ -529,7 +529,7 @@ proc sql;
     create table btc_analytic_file_raw as
         select
              coalesce(A.Date_ID,B.Date_ID,C.Date_ID)
- 	      AS Date 
+ 	     AS Date 
             ,coalesce(A.Open,B.Open,C.Open)
              AS Open format=dollar12.2
             ,coalesce(A.High,B.High,C.High)
@@ -556,33 +556,10 @@ proc sql;
 quit;
 
 * check btc_analytic_file_raw for rows whose unique id values are repeated,
-  missing where the column Date_ID is intended to be a primary key;
+  missing where the column Date is intended to be a primary key;
 * after executing this data step, we see that the full joins used above
   introduced duplicates in btc_analytic_file_raw, which need to be mitigated
   before proceeding;
-* notes:
-    (1) even though the data-integrity check and mitigation steps below could
-        be performed with SQL queries, as was used earlier in this file, it's
-        often faster and less code to use data steps and proc sort steps to
-        check for and remove duplicates. In particular, by-group processing
-        is much more convenient when checking for duplicates than the SQL row
-        aggregation and in-line view tricks used above. In practice, though,
-        you should use whatever methodology you're most comfortable with
-    (2) when determining what type of join to use to combine tables, it's
-        common to designate one of the table as the "master" table, and to use
-        left (outer) joins to add columns from the other "auxiliary" tables
-    (3) however, if this isn't the case, an inner joins typically makes sense
-        whenever we're only interested in rows whose unique id values match up
-        in the tables to be joined
-    (4) similarly, full (outer) joins tend to make sense whenever we want all
-        possible combinations of all rows with respect to unique id values to
-        be included in the output dataset, such as in this example, where not
-        every dataset will necessarily have every possible of Date_ID in it
-    (5) unfortunately, though, full joins of more than two tables can also
-        introduce duplicates with respect to unique id values, even if unique
-        id values are not duplicated in the original input datasets 
-*/
-;
 data btc_analytic_file_raw_bad_ids;
     set btc_analytic_file_raw;
     by Date;
@@ -596,11 +573,11 @@ data btc_analytic_file_raw_bad_ids;
         end;
 run;
 
-* remove duplicates from btc_analytic_file_raw with respect to Date_ID;
+* remove duplicates from btc_analytic_file_raw with respect to Date;
 * after inspecting the rows in btc_analytic_file_raw_bad_ids, we see that
   either of the rows in duplicate-row pairs can be removed without losing
   values for analysis, so we use proc sort to indiscriminately remove
-  duplicates, after which column Date_ID is guaranteed to form a primary key;
+  duplicates, after which column Date is guaranteed to form a primary key;
 proc sort
         nodupkey
         data=btc_analytic_file_raw

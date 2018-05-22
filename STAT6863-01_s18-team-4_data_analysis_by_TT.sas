@@ -18,14 +18,17 @@ from which all data analyses below begin;
 *******************************************************************************;
 *
 Question: What is the distribution of Bitcoin BTC from April 2016 to present?
+
 Rationale: This should help identify the specific distribution of BTC
+
 Note: This compares the column the column "Close" from btcusd16 to the same
 name column from btcusd17 and btcusd18.
+
 Limitations: This methodology does not account for any datasets with missing 
 data nor does it attempt to validate data in any way.
 ;
 
-/** distribution **/;
+/* distribution */;
 ods graphics on;
 proc univariate
     data=btc_analytic_file;
@@ -51,8 +54,7 @@ proc means
     ;
 run;
 
-
-/** remove $ sign from N which is the sample size **/;
+/* remove $ sign from N which is the sample size */;
 data analysis;
     set btc_analytic_file_temp;
         array nValue[3] High Close MarketCap;      
@@ -68,7 +70,6 @@ do i = 1 to dim(nValue);
    end;
 end;
 run;
-
 
 proc print
     data=analysis
@@ -89,10 +90,13 @@ run;
 *
 Question: What are the top 10 highest prices and top 10 lowest prices during 
 these years?
+
 Rationale: This would provide more BTC behaviors, movements and have a better 
 insights why there are such changes.
+
 Note: This compares the column the column "High" and "Low" from btcusd16 to the 
 same name columns from btcusd17 and btcusd18.
+
 Limitations: This methodology does not account for any datasets with missing 
 data nor does it attempt to validate data in any way.
 ;
@@ -115,7 +119,6 @@ proc sql;
         ;
 quit;
 
-
 proc print
     data=high_top10_print
     noobs style(header)={just=c}
@@ -129,8 +132,6 @@ proc print
     title "Top 10 High's"
     ;
 run;
-
-
 
 proc sql;
     create table high_bottom10 as
@@ -149,7 +150,6 @@ proc sql;
             high_bottom10(obs=10)
         ;
 quit;
-
 
 proc print
     data=high_bottom10_print
@@ -171,18 +171,21 @@ run;
 *******************************************************************************;
 *
 Question: What are major corrections in Bitcoin history?
+
 Rationale: This would provide more true understanding of a few major corrections 
 in the past and use those outputs to forecast or predict the BTC price for the 
 year of 2018.
+
 Note: This compares the column the column "Date_ID" and "Low" from btcusd16 to 
 the same name columns from btcusd17 and btcusd18 to find a reverse movement 
 which is usually negative, and any resistance and support levels.
+
 Limitations: Even though predictive modeling is specified in the research
 questions, this methodology solely relies on a crude descriptive technique
 by looking at a trend line and linear regression.
 ;
 
-/** Fibnonacci Retracement and golden ratio **/;
+/* Fibnonacci Retracement and golden ratio */;
 proc sql;
     create table pred_highfromlow as
         select
@@ -209,7 +212,7 @@ run;
 quit;
 
 
-/** display the slope and intercept of a regression line **/;
+/* display the slope and intercept of a regression line */;
 ods graphics off;
 proc reg 
     data=pred_highfromlow;
@@ -231,14 +234,13 @@ proc sgplot
          border title="Parameter Estimates" position=topleft;
 run;
 
-/** Based on the Analysis of Variance table output,
-    we see R-Sqquare=0.7474 for example, it means that 74% of...
-    will affect the other variable.
-    Based on the Parameter Estimates table output
-    we see the Intercept and HighvsLow, the value will be interpreted as
-    High=1086.7 + 7.4933*(HighvsLow)
-    P-value=0.0001 is less than 5% hence it is significant **/;
-
+/* Based on the Analysis of Variance table output,
+   we see R-Sqquare=0.7474 for example, it means that 74% of...
+   will affect the other variable.
+   Based on the Parameter Estimates table output
+   we see the Intercept and HighvsLow, the value will be interpreted as
+   High=1086.7 + 7.4933*(HighvsLow)
+   P-value=0.0001 is less than 5% hence it is significant */;
 proc reg 
     data=pred_highfromlow;
     model High=HighvsLow;

@@ -28,7 +28,7 @@ Limitations: This methodology does not account for any datasets with missing
 data nor does it attempt to validate data in any way.
 ;
 
-/* distribution */;
+/* distribution */
 ods graphics on;
 proc univariate
     data=btc_analytic_file;
@@ -54,7 +54,7 @@ proc means
     ;
 run;
 
-/* remove $ sign from N which is the sample size */;
+/* remove $ sign from N which is the sample size */
 data analysis;
     set btc_analytic_file_temp;
         array nValue[3] High Close MarketCap;      
@@ -185,7 +185,7 @@ questions, this methodology solely relies on a crude descriptive technique
 by looking at a trend line and linear regression.
 ;
 
-/* Fibnonacci Retracement and golden ratio */;
+/* Fibnonacci Retracement and golden ratio */
 proc sql;
     create table pred_highfromlow as
         select
@@ -212,7 +212,7 @@ run;
 quit;
 
 
-/* display the slope and intercept of a regression line */;
+/* display the slope and intercept of a regression line */
 ods graphics off;
 proc reg 
     data=pred_highfromlow;
@@ -240,7 +240,7 @@ run;
    Based on the Parameter Estimates table output
    we see the Intercept and HighvsLow, the value will be interpreted as
    High=1086.7 + 7.4933*(HighvsLow)
-   P-value=0.0001 is less than 5% hence it is significant */;
+   P-value=0.0001 is less than 5% hence it is significant */
 proc reg 
     data=pred_highfromlow;
     model High=HighvsLow;

@@ -14,12 +14,21 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1 justify=left
+'Question: What is the top 5 market cap of Bitcoin BTC from April 2016 to April 2018?.'
+;
+
+title2 justify=left
+'Rationale: This will help identify the market cap  of Bitcoin as compared to other cryptocurrency.'
+;
+
+
+footnote1 justify=left
+"Top High Market Cap of Bitcoin were seen in Dec 2017 between Dec 15 and Dec 20."
+;
+
 *
-Question: What is the top 5 market cap of Bitcoin BTC from April 2016 to April 2018?
-
-Rationale: This will help identify the market cap  of Bitcoin as compared to 
-other cryptocurrency
-
 Note: This compares the column the column "MarketCap" from btcusd16 to the same
 name column from btcusd17 and btcusd18
 
@@ -56,19 +65,47 @@ proc print
     var
         MarketCap
     ;
-    title "Top 5 Market Cap"
-    ;
+   
 run;
+title;
+footnote;
 
+title1 justify=left
+'ScatterPlot Metrics'
+;
+
+footnote1 justify=left
+"ScatterPlot of Bitcoin MarketCap by year."
+;
+
+
+proc sgplot data=MarketCap_top5_print;
+    scatter
+        x=Date
+        y=MarketCap
+    ;
+	
+run;
+title;
+footnote;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1 justify=left
+'Question: What are the top 5 highest prices between this time period?.'
+;
+
+title2 justify=left
+'Rationale: This would help provide more insight into how cryptocurrency fared.'
+;
+
+footnote1 justify=left
+"Top High Bitcoin prices are seen in Dec 2017."
+;
+
 *
-Question: What are the top 5 highest prices between this time period?
-
-Rationale: This would help provide more insight into how cryptocurrency fared
-
 Note: This compares the column "High"  from btcusd16 to the same name columns 
 from btcusd17 and btcusd18.
 
@@ -94,7 +131,6 @@ proc sql;
         ;
 quit;
 
-
 proc print
     data=high_top5_print
     noobs style(header)={just=c}
@@ -105,20 +141,27 @@ proc print
     var
         High
     ;
-    title "Top 5 High's"
-    ;
 run;
-
+title;
+footnote;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1 justify=left
+'Question: What are the top 5 lowest prices between this time period?.'
+;
+
+title2 justify=left
+'Rationale: This would provide help identify the time and market conditions leading to it.'
+;
+
+footnote1 justify=left
+"Bottom lowest Bitcoin prices were seen between April and June 2015."
+;
+
 *
-Question: What are the top 5 lowest prices between this time period?
-
-Rationale: This would provide help identify the time and market conditions 
-leading to it.
-
 Note: This compares the column the column "Low" from btcusd16 to the same 
 name columns from btcusd17 and btcusd18.
 
@@ -155,6 +198,7 @@ proc print
     var
         High
     ;
-    title "Bottom 5 Low's"
-    ;
+
 run;
+title;
+footnote;

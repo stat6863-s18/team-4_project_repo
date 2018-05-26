@@ -273,7 +273,7 @@ proc sql;
             ,coalesce(A.Volume,B.Volume,C.Volume)
              AS Volumn
             ,coalesce(A.MarketCap,B.MarketCap,C.MarketCap)
-             AS MarketCap format=dollar16.2
+             AS MarketCap format=dollar20.2
         from
             btcusd16 as A
             full join

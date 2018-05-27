@@ -173,6 +173,7 @@ proc sql;
     ;
 quit;
 
+
 * check btcusd17_raw for bad unique id values;
 proc sql;
     /* check for duplicate unique id values; after executing this query, we
@@ -211,6 +212,7 @@ proc sql;
 	    Date_ID
     ;
 quit;
+
 
 * check btcusd18_raw for bad unique id values;
 proc sql;
@@ -251,276 +253,6 @@ proc sql;
     ;
 quit;
 
-* inspect columns of interest in cleaned versions of datasets;
-    /*
-	title "Inspect Market Cap in btcusd16";
-	proc sql;
-	    select
-		 min(put(marketcap,dollar16.)) as min
-		,max(put(marketcap,dollar16.)) as max
-		,mean(marketcap) as mean
-		,median(marketcap) as median
-		,nmiss(put(marketcap,dollar16.)) as missing
-	    from
-		btcusd16
-		;
-	quit;
-	title;
-
-	title "Inspect Market Cap in btcusd17";
-	proc sql;
-	    select
-		 min(put(marketcap,dollar16.)) as min
-		,max(put(marketcap,dollar16.)) as max
-		,mean(marketcap) as mean
-		,median(marketcap) as median
-		,nmiss(put(marketcap,dollar16.)) as missing
-	    from
-		btcusd17
-	    ;
-	quit;
-	title;
-
-	title "Inspect Market Cap in btcusd18";
-	proc sql;
-	    select
-		 min(put(marketcap,dollar16.)) as min
-		,max(put(marketcap,dollar16.)) as max
-		,mean(marketcap) as mean
-		,median(marketcap) as median
-		,nmiss(put(marketcap,dollar16.)) as missing
-	    from
-		btcusd18
-	    ;
-	quit;
-	title;
-*/
-
-/*
-
-	* combine btcusd16, btcusd17 and btcusd18 horizontally using a data-step 
-	  match-merge;
-	* note: After running the data step and proc sort step below several times
-	  and averaging the fullstimer output in the system log, it takes about
-	  0.02 seconds of combined real time to execute the codes and a maximum of
-	  about 1.1 MB of memory (1168 KB for the data step vs. 269 KB for the
-	  proc sort step) on the computer they were tested on;
-
-	data btcusd161718_v1;
-	    retain
-		Date_ID
-		Open
-		High
-		Low
-		Close
-		Volume
-		MarketCap
-	    ;
-	    keep
-		Date_ID
-		Open
-		High
-		Low
-		Close
-		Volume
-		MarketCap
-	    ;
-	    merge
-		btcusd16
-		btcusd17
-		btcusd18
-	    ;
-	    by Date_ID
-	    ;
-	run;
-
-	proc sort 
-	    data=btcusd161718_v1;
-	    by Date_ID;
-	run;
-
-
-	* combine btcusd16, btcusd17 and btcusd18 horizontally using proc sql;
-	* note: After running the proc sql step below several times and averaging
-	  the fullstimer output in the system log, it takes about 0.04 seconds
-	  of combined real time to execute the codes and a maximum of about 
-	  9 MB of memory on the computer they were tested on. It turns out that 
-	  the proc sql step appears to take roughly the same amount of time 
-	  to execute as the combined data step and proc sort steps above, but to 
-	  use roughly five times as much memory;
-	* note: Based upon these results, the proc sql step is preferable
-	  if memory performance isn't critical. This is because less code is 
-	  required, so it's faster to write and verify correct output has been 
-	  obtained;
-
-	proc sql;
-	    create table btcusd161718_v2 as
-		select
-		     coalesce(A.Date_ID,B.Date_ID,C.Date_ID) as Date
-		    ,coalesce(A.Open,B.Open,C.Open) as Open format=dollar12.
-		    ,coalesce(A.High,B.High,C.High) as High format=dollar12.
-		    ,coalesce(A.Low,B.Low,C.Low) as Low format=dollar12.
-		    ,coalesce(A.Close,B.Close,C.Close) as Close format=dollar12.
-		    ,coalesce(A.Volume,B.Volume,C.Volume) as Volumn
-		    ,coalesce(A.MarketCap,B.MarketCap,C.MarketCap) as MarketCap format=dollar16.
-		from
-		    btcusd16 as A
-		    full join
-		    btcusd17 as B
-		    on A.Date_ID=B.Date_ID
-		    full join
-		    btcusd18 as C
-		    on B.Date_ID=C.Date_ID
-		order by
-		    Date
-	    ;
-	quit;
-
-
-	* verify that btcusd161718_v1 and btcusd161718_v2 are identical;
-	proc compare
-		base=btcusd161718_v1
-		compare=btcusd161718_v2
-		novalues
-	    ;
-	run;
-
-
-	* combine btcusd16, btcusd17 and btcusd18 vertically using a data-step interweave,
-	  combining composite key values into a single primary key value;
-	* note: After running the data step and proc sort step below several times
-	  and averaging the fullstimer output in the system log, they tend to take
-	  about 0.05 seconds of combined "real time" to execute and a maximum of
-	  about 1 MB of memory (1223 KB for the data step vs. 800 KB for the
-	  proc sort step) on the computer they were tested on;
-	data btcusd16_17_18_v1;
-	    retain
-		data_source
-		Date_ID
-		Open
-		High
-		Low
-		Close
-		Volume
-		MarketCap
-	    ;
-	    keep
-		data_source
-		Date_ID
-		Open
-		High
-		Low
-		Close
-		Volume
-		MarketCap	   
-	    ;
-	    set
-		btcusd16(in=ay2016_data_row)
-		btcusd17(in=ay2017_data_row)
-		btcusd18(in=ay2018_data_row)
-	    ;
-	    if
-		ay2016_data_row=1
-	    then
-		do;
-		    data_source="2016";
-		end;
-	    if  
-		ay2017_data_row=1
-	    then
-		do;
-		    data_source="2017";
-		end;
-	    if 
-		   ay2018_data_row=1
-	    then
-		   do;
-		      data_source="2018";
-		   end;
-	run;
-	proc sort data=btcusd16_17_18_v1;
-	    by Date_ID;
-	run;
-
-
-	* combine btcusd16, btcusd17 and btcusd18 vertically using proc sql;
-	* note: After running the proc sql step below several times and averaging
-	  the fullstimer output in the system log, they tend to take about 0.09
-	  seconds of "real time" to execute and about 5 MB of memory on the computer
-	  they were tested on. Consequently, the proc sql step appears to take roughly
-	  half as much time to execute as the combined data step and proc sort steps
-	  above, but to use slightly more memory;
-	* note to learners: Based upon these results, the proc sql step is preferable
-	  if memory performance isn't critical. This is because less code is required,
-	  so it's faster to write and verify correct output has been obtained. In
-	  addition, because proc sql doesn't create a PDV with the length of each
-	  column determined by the column's first appearance, less care is needed for
-	  issues like columns lengths being different in the input datasets;
-	proc sql;
-	    create table btcusd16_17_18_v2 as
-		(
-		    select
-			 "2016"
-			  AS
-			  data_source
-			 ,Date_ID
-			 ,Open
-			 ,High
-			 ,Low
-			 ,Close
-			 ,Volume
-			 ,MarketCap
-		    from
-			btcusd16
-		)
-		outer union corr
-		(
-		    select
-			 "2017"
-			  AS
-			  data_source
-			 ,Date_ID
-			 ,Open
-			 ,High
-			 ,Low
-			 ,Close
-			 ,Volume
-			 ,MarketCap
-		    from
-			btcusd17
-		)
-		   outer union corr
-		(
-		    select
-			 "2018"
-			  AS
-			  data_source
-			 ,Date_ID
-			 ,Open
-			 ,High
-			 ,Low
-			 ,Close
-			 ,Volume
-			 ,MarketCap
-		    from
-			btcusd18
-		)
-		order by
-		     Date_ID
-	    ;
-	quit;
-
-
-	* verify that btcusd16_17_18_v1 and btcusd16_17_18_v2 are
-	  identical;
-	proc compare
-		base=btcusd16_17_18_v1
-		compare=btcusd16_17_18_v2
-		novalues
-	    ;
-	run;
-
-*/
 
 * build analytic dataset from raw datasets imported above, including only the
   columns and minimal data-cleaning/transformation needed to address each
@@ -541,7 +273,7 @@ proc sql;
             ,coalesce(A.Volume,B.Volume,C.Volume)
              AS Volumn
             ,coalesce(A.MarketCap,B.MarketCap,C.MarketCap)
-             AS MarketCap format=dollar16.2
+             AS MarketCap format=dollar20.2
         from
             btcusd16 as A
             full join
@@ -554,6 +286,7 @@ proc sql;
             Date
     ;
 quit;
+
 
 * check btc_analytic_file_raw for rows whose unique id values are repeated,
   missing where the column Date is intended to be a primary key;
@@ -573,6 +306,7 @@ data btc_analytic_file_raw_bad_ids;
         end;
 run;
 
+
 * remove duplicates from btc_analytic_file_raw with respect to Date;
 * after inspecting the rows in btc_analytic_file_raw_bad_ids, we see that
   either of the rows in duplicate-row pairs can be removed without losing
@@ -587,3 +321,4 @@ proc sort
         Date
     ;
 run;
+

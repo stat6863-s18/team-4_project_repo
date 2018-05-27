@@ -201,6 +201,7 @@ proc print
 run;
 
 
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
@@ -268,14 +269,6 @@ proc sgplot data=pred_highfromlow;
     where Date > 20180400;
     title "Price Prediction based on Resistant and Support Level From April 2018";
 run;
-
-ods graphics on;
-proc gplot 
-    data=pred_highfromlow;
-    plot High;
-run;
-quit;
-
 
 
 * display the slope and intercept of a regression line - resistant level;

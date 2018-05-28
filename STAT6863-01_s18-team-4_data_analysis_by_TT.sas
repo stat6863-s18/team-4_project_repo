@@ -198,6 +198,7 @@ run;
   X is an indenpendent variable (ResistantLevel variable);
 proc reg
     data=analysis3;
+    /* noprint option can be used to suppress the output */
     model High = ResistantLevel;
     ods output ParameterEstimates=PE1;
 run;
@@ -226,6 +227,7 @@ run;
   X is indenpendent variable (SuppportLevel Variable);
 proc reg
     data=analysis3;
+    /* noprint option can be used to suppress the output */
     model High = SupportLevel;
     ods output ParameterEstimates=PE2;
 run;

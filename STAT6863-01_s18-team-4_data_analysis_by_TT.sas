@@ -50,39 +50,7 @@ proc univariate
 run;
 quit;
 
-proc means
-        min max mean std
-        noprint 
-        data=btc_analytic_file
-    ;
-    var
-        High
-        MarketCap
-    ;
-    output
-        out=btc_analytic_file_temp(drop=_type_ _freq_
-                                  rename=(_stat_ = STAT)
-                                  )
-    ;
-run;
-
-* remove ($) sign from N which is the sample size;
-data analysis1;
-    set btc_analytic_file_temp;
-        array nValue[2] High MarketCap;      
-        /* numerical variables */
-        array cValue[2] $20.2;                      
-        /* cValue[i] is formatted version of nValue[i] */
-        label cValue1="High" cValue3="MarketCap";
- 
-do i = 1 to dim(nValue);
-    select (STAT);
-        when ('N')    cValue[i] = put(nvalue[i], 8.0);
-        otherwise     cValue[i] = vvalue(nvalue[i]);
-   end;
-end;
-run;
-
+* print out analysis1 to address the research question;
 proc print
     data=analysis1
     noobs label
@@ -94,6 +62,10 @@ proc print
     ;
     title 'HIGH - MARKET CAP FROM APRIL, 2015 TO APRIL, 2018';
 run;
+
+* titles/footnotes;
+title;
+footnote;
 
 
 
@@ -127,18 +99,7 @@ Limitations: This methodology does not account for any datasets with missing
 data nor does it attempt to validate data in any way.
 ;
 
-proc sql outobs=10;
-    create table high_top10 as
-        select
-            Date
-            ,High format=dollar12.2
-        from
-            btc_analytic_file
-        order by
-            High descending
-        ;
-quit;
-
+* output first 10 rows from high_top10 to display the top 10 High's only;
 proc print
     data=high_top10
     noobs style(header)={just=c}
@@ -153,18 +114,7 @@ proc print
     ;
 run;
 
-proc sql outobs=10;
-    create table low_bottom10 as
-        select
-            Date
-            ,Low format=dollar12.2
-        from
-            btc_analytic_file
-        order by
-            Low
-        ;
-quit;
-
+* output first 10 rows from low_bottom10 to display the bottm 10 Low's only;
 proc print
     data=low_bottom10
     noobs style(header)={just=c}
@@ -179,19 +129,7 @@ proc print
     ;
 run;
 
-proc sql;
-   create table analysis2 as
-       select
-           Low as Buy_Low
-           ,High as Sell_High
-           ,High-Low as Difference format=dollar12.2
-           ,High/Low as RateOfReturn format=percent12.2
-       from
-           high_top10
-           ,low_bottom10
-       ;
-quit;
-
+* print out analysis2 to address 'buy low, sell high' and research question
 proc print
    data=analysis2
    noobs style(header)={just=c}
@@ -199,6 +137,10 @@ proc print
    title "Buy Low Sell High Analysis"
    ;
 run;
+
+* titles/footnotes;
+title;
+footnote;
 
 
 
@@ -236,23 +178,7 @@ questions, this methodology solely relies on a crude descriptive technique
 by looking at a trend line and linear regression.
 ;
 
-* Fibnonacci Retracement and golden ratio;
-proc sql;
-   create table pred_highfromlow as
-       select
-           Date
-           ,High
-           ,Low
-           ,High - Low as HighvsLow format=dollar12.2
-           ,(High - Low) * 0.618 + Low as ResistantLevel format=dollar12.2
-           ,(High - Low) * 0.382 + Low as SupportLevel format=dollar12.2
-       from
-           btc_analytic_file
-        order by
-            Date descending
-   ;
-quit;
-
+* compute coefficients;
 proc corr
    data=pred_highfromlow;
    var High;
@@ -315,3 +241,9 @@ proc sgplot
    inset "Intercept = &Int" "Slope = &Slope" /
         border title="Parameter Estimates" position=topleft;
 run;
+
+* titles/footnotes;
+title;
+footnote;
+
+

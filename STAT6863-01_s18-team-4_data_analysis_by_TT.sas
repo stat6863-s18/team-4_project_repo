@@ -97,7 +97,7 @@ proc print
     ;
 run;
 
-* titles/footnotes;
+* clear titles/footnotes;
 title;
 footnote;
 
@@ -133,7 +133,7 @@ Limitations: This methodology does not account for any datasets with missing
 data nor does it attempt to validate data in any way.
 ;
 
-* create analysis2 to analyze 'buy low, sell high' for research question 2;
+* sort by descending High with 10 obs only;
 proc sql outobs=10;
     create table high_top10 as
         select
@@ -143,33 +143,6 @@ proc sql outobs=10;
             btc_analytic_file
         order by
             High descending
-        ;
-	
-    create table low_bottom10 as
-        select
-             Date
-            ,Low format=dollar12.2
-        from
-            btc_analytic_file
-        order by
-            Low
-        ;
-quit;
-
-proc sql;
-    create table analysis2 as
-        select
-            Low AS Buy_Low
-	     label "Buying at Low Price"
-           ,High AS Sell_High
-	     label "Selling at High Price" 
-           ,High - Low AS Difference format=dollar12.2
-	     label "Price Difference"
-           ,High / Low AS RateOfReturn format=percent12.2
-	     label "Rate of Return"
-        from
-            high_top10
-           ,low_bottom10
         ;
 quit;
 
@@ -187,6 +160,19 @@ proc print
     ;
 run;
 
+* sort by Low with 10 obs only;
+proc sql outobs=10;
+    create table low_bottom10 as
+        select
+             Date
+            ,Low format=dollar12.2
+        from
+            btc_analytic_file
+        order by
+            Low
+        ;
+quit;
+
 * output the first 10 rows from low_bottom10 to display the bottom 10 Low's only;
 title "Bottom 10 Low's";
 proc print
@@ -201,7 +187,25 @@ proc print
     ;
 run;
 
-* print out analysis2 to address 'buy low, sell high' and research question;
+* create analysis2 to analyze 'buy low, sell high' for research question 2;
+proc sql;
+    create table analysis2 as
+        select
+            Low AS Buy_Low
+	     label "Buying at Low Price"
+           ,High AS Sell_High
+	     label "Selling at High Price" 
+           ,High - Low AS Difference format=dollar12.2
+	     label "Price Difference"
+           ,High / Low AS RateOfReturn format=percent12.2
+	     label "Rate of Return"
+        from
+            high_top10
+           ,low_bottom10
+        ;
+quit;
+
+* print out analysis2 to address 'buy low, sell high' for research question;
 title "Buy Low Sell High Analysis";
 proc print
     data=analysis2
@@ -209,7 +213,7 @@ proc print
     ;
 run;
 
-* titles/footnotes;
+* clear titles/footnotes;
 title;
 footnote;
 
@@ -344,6 +348,6 @@ proc sgplot
         border title="Parameter Estimates" position=topleft;
 run;
 
-* titles/footnotes;
+* clear titles/footnotes;
 title;
 footnote;

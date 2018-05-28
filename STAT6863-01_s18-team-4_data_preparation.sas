@@ -350,12 +350,12 @@ data analysis1;
         array cValue[2] $20.2;                      
         /* cValue[i] is formatted version of nValue[i] */
         label cValue1="High" cValue3="MarketCap";
- do i = 1 to dim(nValue);
-    select (STAT);
-        when ('N')    cValue[i] = put(nvalue[i], 8.0);
-        otherwise     cValue[i] = vvalue(nvalue[i]);
-   end;
-end;
+    do i = 1 to dim(nValue);
+        select (STAT);
+            when ('N')    cValue[i] = put(nvalue[i], 8.0);
+            otherwise     cValue[i] = vvalue(nvalue[i]);
+        end;
+    end;
 run;
 
 

@@ -421,3 +421,84 @@ proc sql;
         ;
 quit;
 
+
+* create Market_Cap_top5 to predict top 5 Market Cap
+  research question 1;
+proc sql;
+    create table Market_Cap_top5 as
+        select
+            Date
+            ,MarketCap format=dollar12.2
+        from
+            btc_analytic_file
+        order by
+            MarketCap descending
+        ;
+    create table MarketCap_top5_print as
+        select
+            *
+        from
+            Market_Cap_top5(obs=5)
+        ;
+quit;
+
+
+* create high_top5 to predict top 5 high prices
+  research question 2;
+proc sql;
+    create table high_top5 as
+        select
+            Date
+            ,High format=dollar12.2
+        from
+             btc_analytic_file
+        order by
+            High descending
+        ;
+    create table high_top5_print as
+        select
+            *
+        from
+            high_top5(obs=5)
+        ;
+quit;
+
+
+* create low_bottom5 to predict top 5 low prices
+  research question 2;
+proc sql;
+    create table low_bottom5 as
+        select
+            Date
+            ,Low format=dollar12.2
+        from
+            btc_analytic_file
+        order by
+            Low
+        ;
+    create table low_bottom5_print as
+        select
+            *
+        from
+            low_bottom5(obs=5)
+        ;
+quit;
+
+
+* create low_bottom5 to predict top 5 low prices
+  research question 3;
+  
+proc sql;
+    create table raanalysis as
+        select
+            low_bottom5.Low AS Buy_Lowest
+	     label "Buy Low"
+           ,high_top5.High AS Sell_Highest
+	     label "Sell High " 
+           ,high_top5.High - low_bottom5.Low AS Difference format=dollar12.2
+	     label "ROI"
+        from
+            high_top5
+           ,low_bottom5
+        ;
+quit;

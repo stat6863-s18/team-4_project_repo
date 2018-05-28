@@ -41,8 +41,7 @@ Limitations: This methodology does not account for any datasets with missing
 data nor does it attempt to validate data in any way.
 ;
 
-* distribution;
-ods graphics on;
+* summarize the data distribution;
 proc univariate
     data=btc_analytic_file;
     var High;
@@ -50,7 +49,8 @@ proc univariate
 run;
 quit;
 
-
+* print out analysis1 to address the research question;
+title 'HIGH - MARKET CAP FROM APRIL, 2015 TO APRIL, 2018';
 proc print
     data=analysis1
     noobs label
@@ -60,8 +60,11 @@ proc print
         cValue:
         /style(data)={just=r}
     ;
-    title 'HIGH - MARKET CAP FROM APRIL, 2015 TO APRIL, 2018';
 run;
+
+* titles/footnotes;
+title;
+footnote;
 
 
 
@@ -95,6 +98,8 @@ Limitations: This methodology does not account for any datasets with missing
 data nor does it attempt to validate data in any way.
 ;
 
+* output the first 10 rows from high_top10 to display the top 10 High's only;
+title "Top 10 High's";
 proc print
     data=high_top10
     noobs style(header)={just=c}
@@ -105,10 +110,10 @@ proc print
     var
         High
     ;
-    title "Top 10 High's"
-    ;
 run;
 
+* output the first 10 rows from low_bottom10 to display the bottm 10 Low's only;
+title "Bottom 10 Low's";
 proc print
     data=low_bottom10
     noobs style(header)={just=c}
@@ -119,17 +124,19 @@ proc print
     var
         Low
     ;
-    title "Bottom 10 Low's"
+run;
+
+* print out analysis2 to address 'buy low, sell high' and research question;
+title "Buy Low Sell High Analysis";
+proc print
+    data=analysis2
+    noobs style(header)={just=c}
     ;
 run;
 
-proc print
-   data=analysis2
-   noobs style(header)={just=c}
-   ;
-   title "Buy Low Sell High Analysis"
-   ;
-run;
+* titles/footnotes;
+title;
+footnote;
 
 
 
@@ -153,9 +160,7 @@ footnote2 justify=left
 ;
 
 footnote3 justify=left
-"Based on the Parameter Estimates outputs, we're able to develop the linear regression line that has an equation of Y = a + bX, where X is the explanatory variable and Y is the dependent variable (High variable in this case). The slope of the line is b and a is the intercept. The High values can be interpreted as
-High = -21.57 + 1.0391 * (ResistantLevel)
-or High = -34.24 + 1.0641 * (SupportLevel)"
+"Based on the Parameter Estimates outputs, we're able to develop the linear regression line that has an equation of Y = a + bX, where X is the explanatory variable and Y is the dependent variable (High variable in this case). The slope of the line is b and a is the intercept. The High values can be interpreted as High = -21.57 + 1.0391 * (ResistantLevel) or High = -34.24 + 1.0641 * (SupportLevel)"
 ;
 
 *
@@ -167,15 +172,15 @@ questions, this methodology solely relies on a crude descriptive technique
 by looking at a trend line and linear regression.
 ;
 
-* compute coefficients;
+* use proc corr to compute coefficients;
 proc corr
-   data=analysis3;
-   var High;
-   with ResistantLevel;
+    data=analysis3;
+    var High;
+    with ResistantLevel;
     with SupportLevel;
 run;
 
-* display stat graphics;
+* use proc sgplot to display stat graphics;
 proc sgplot data=analysis3;
     series x=Date y=High / legendlabel="High";
     series x=Date y=Low / legendlabel="Low";
@@ -186,48 +191,59 @@ proc sgplot data=analysis3;
     title "Price Prediction based on Resistant and Support Level From April 2018";
 run;
 
+* develop a predicted regression model for High based on Resistant Level;
+* use proc reg to develop regression model (high = resistantlevel) that has an 
+  equation of Y = a + bX, where Y is dependent variable (High Variable) and
+  X is indenpendent variable (ResistantLevel Variable);
+proc reg
+    data=analysis3;
+    model high = resistantlevel;
+    ods output ParameterEstimates=PE1;
+run;
+
+* set PE1 to display the intercept and slope in the graph;
+data _null_;
+    set PE1;
+    if _n_ = 1 then call symput('Int', put(estimate, BEST6.));    
+    else            call symput('Slope', put(estimate, BEST6.));  
+run;
 
 * display the slope and intercept of a regression line - resistant level;
-ods graphics off;
-proc reg
-   data=analysis3;
-   model high = resistantlevel;
-   ods output ParameterEstimates=PE1;
-run;
-
-data _null_;
-  set PE1;
-  if _n_ = 1 then call symput('Int', put(estimate, BEST6.));    
-  else            call symput('Slope', put(estimate, BEST6.));  
-run;
-
 proc sgplot
-   data=analysis3 noautolegend;
-   title "Regression Line with Slope and Intercept - Resistant Level";
-   reg y=high x=resistantlevel;
-   inset "Intercept = &Int" "Slope = &Slope" /
+    data=analysis3 noautolegend;
+    title "Regression Line with Slope and Intercept - Resistant Level";
+    reg y=high x=resistantlevel;
+    inset "Intercept = &Int" "Slope = &Slope" /
         border title="Parameter Estimates" position=topleft;
 run;                                                                                                                
 
 
-* display the slope and intercept of a regression line - support level;
-ods graphics off;
+* develop a predicted regression model for High based on Resistant Level;
+* use proc reg to develop regression model (high = resistantlevel) that has an 
+  equation of Y = a + bX, where Y is dependent variable (High Variable) and
+  X is indenpendent variable (SuppportLevel Variable);
 proc reg
-   data=analysis3;
-   model high = supportlevel;
-   ods output ParameterEstimates=PE2;
+    data=analysis3;
+    model high = supportlevel;
+    ods output ParameterEstimates=PE2;
 run;
 
+* set PE1 to display the intercept and slope in the graph;
 data _null_;
-  set PE2;
-  if _n_ = 1 then call symput('Int', put(estimate, BEST6.));    
-  else            call symput('Slope', put(estimate, BEST6.));  
+    set PE2;
+    if _n_ = 1 then call symput('Int', put(estimate, BEST6.));    
+    else            call symput('Slope', put(estimate, BEST6.));  
 run;
 
+* display the slope and intercept of a regression line - support level;
 proc sgplot
-   data=analysis3 noautolegend;
-   title "Regression Line with Slope and Intercept - Support Level";
-   reg y=high x=supportlevel;
-   inset "Intercept = &Int" "Slope = &Slope" /
+    data=analysis3 noautolegend;
+    title "Regression Line with Slope and Intercept - Support Level";
+    reg y=high x=supportlevel;
+    inset "Intercept = &Int" "Slope = &Slope" /
         border title="Parameter Estimates" position=topleft;
 run;
+
+* titles/footnotes;
+title;
+footnote;

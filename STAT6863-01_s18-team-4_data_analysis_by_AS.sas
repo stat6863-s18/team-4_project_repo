@@ -36,25 +36,6 @@ Limitations: This methodology does not account for datasets with missing
 data neither does it attempt to validate data in any way.
 ;
 
-proc sql;
-    create table Market_Cap_top5 as
-        select
-            Date
-            ,MarketCap format=dollar12.2
-        from
-            btc_analytic_file
-        order by
-            MarketCap descending
-        ;
-    create table MarketCap_top5_print as
-        select
-            *
-        from
-            Market_Cap_top5(obs=5)
-        ;
-quit;
-
-
 proc print
     data=MarketCap_top5_print
     noobs style(header)={just=c}
@@ -113,24 +94,6 @@ Limitations: This methodology does not account for datasets with missing
 data neither does it attempt to validate data in any way.
 ;
 
-proc sql;
-    create table high_top5 as
-        select
-            Date
-            ,High format=dollar12.2
-        from
-             btc_analytic_file
-        order by
-            High descending
-        ;
-    create table high_top5_print as
-        select
-            *
-        from
-            high_top5(obs=5)
-        ;
-quit;
-
 proc print
     data=high_top5_print
     noobs style(header)={just=c}
@@ -169,25 +132,6 @@ Limitations: This methodology does not account for datasets with missing
 data neither does it attempt to validate data in any way.
 ;
 
-proc sql;
-    create table low_bottom5 as
-        select
-            Date
-            ,High format=dollar12.2
-        from
-            btc_analytic_file
-        order by
-            High
-        ;
-    create table low_bottom5_print as
-        select
-            *
-        from
-            low_bottom5(obs=5)
-        ;
-quit;
-
-
 proc print
     data=low_bottom5_print
     noobs style(header)={just=c}
@@ -202,3 +146,35 @@ proc print
 run;
 title;
 footnote;
+
+*******************************************************************************;
+* Research Analysis;
+*******************************************************************************;
+
+title1 justify=left
+'Question: What is the ROI on investing low and selling high?.'
+;
+
+title2 justify=left
+'Rationale: This would provide help identify the ROI of investing in Bitcoin.'
+;
+
+footnote1 justify=left
+"Highest ROI was observed when invested between  April and June 2015."
+;
+
+*
+Note: This takes a diff between top 5 high and low prices.
+
+Limitations: This methodology does not account for datasets with missing 
+data neither does it attempt to validate data in any way.
+;
+
+
+* print Low and High Analysis;
+title "Low and High Analysis";
+proc print
+    data=raanalysis
+    noobs style(header)={just=c}
+    ;
+run;

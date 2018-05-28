@@ -18,7 +18,7 @@ from which all data analyses below begin;
 *******************************************************************************;
 
 title1 justify=left
-'Research Question 1: What is a rate of return (ROR) of Bitcoin BTC if one decided to invest one U.S. dollar on April 2015?'
+'Research Question 1: What is a rate of return (ROR) of Bitcoin BTC if one decided to invest one U.S. dollar in April 2015?'
 ;
 
 title2 justify=left
@@ -26,7 +26,7 @@ title2 justify=left
 ;
 
 footnote1 justify=left
-"Based on our analysis and the output of the HIGH-LOW-MARKET CAP FROM 2015 TO 2018 table, we can see there is a huge difference in Bitcoin price which is about $19,865.17 USD between the MIN ($223.83 in Obs 9) and MAX ($20089.00 in Obs 986) of the High Variable."
+"Based on our analysis and the output of the HIGH-MARKET CAP FROM 2015 TO 2018 table, we can see there is a huge difference in Bitcoin price which is about $19,865.17 USD between the MIN ($223.83 in Obs 9) and MAX ($20089.00 in Obs 986) of the High Variable."
 ;
 
 footnote2 justify=left
@@ -87,7 +87,7 @@ footnote2 justify=left
 ;
 
 footnote3 justify=left
-"Our analysis addresses the importance of High and Low price that crypto enthusitists and long-term speculators would consider and how that afftect the rate of return."
+"This analysis addresses the importance of High and Low price that crypto enthusiasts and long-term speculators would consider and how that afftect the rate of return."
 ;
 
 *
@@ -112,7 +112,7 @@ proc print
     ;
 run;
 
-* output the first 10 rows from low_bottom10 to display the bottm 10 Low's only;
+* output the first 10 rows from low_bottom10 to display the bottom 10 Low's only;
 title "Bottom 10 Low's";
 proc print
     data=low_bottom10

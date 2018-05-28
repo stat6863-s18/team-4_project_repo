@@ -49,6 +49,41 @@ proc univariate
 run;
 quit;
 
+* create analysis1 to analyze a rate or return for research question 1;
+* use means procedure and create btc_analytic_file_temp table to calculate 
+  descriptive statistics;
+proc means
+        min max mean std
+        noprint 
+        data=btc_analytic_file
+    ;
+    var
+        High
+        MarketCap
+    ;
+    output
+        out=btc_analytic_file_temp(drop=_type_ _freq_
+                                  rename=(_stat_ = STAT)
+                                  )
+    ;
+run;
+
+* remove ($) sign from N which is the sample size;
+data analysis1;
+    set btc_analytic_file_temp;
+        array nValue[2] High MarketCap;      
+        /* numerical variables */
+        array cValue[2] $20.2;                      
+        /* cValue[i] is formatted version of nValue[i] */
+        label cValue1="High" cValue2="MarketCap";
+    do i = 1 to dim(nValue);
+        select (STAT);
+            when ('N')    cValue[i] = put(nvalue[i], 8.0);
+            otherwise     cValue[i] = vvalue(nvalue[i]);
+        end;
+    end;
+run;
+
 * print out analysis1 to address the research question;
 title 'HIGH - MARKET CAP FROM APRIL, 2015 TO APRIL, 2018';
 proc print
@@ -97,6 +132,46 @@ same name columns from btcusd17 and btcusd18.
 Limitations: This methodology does not account for any datasets with missing 
 data nor does it attempt to validate data in any way.
 ;
+
+* create analysis2 to analyze 'buy low, sell high' for research question 2;
+proc sql outobs=10;
+    create table high_top10 as
+        select
+             Date
+            ,High format=dollar12.2
+        from
+            btc_analytic_file
+        order by
+            High descending
+        ;
+	
+    create table low_bottom10 as
+        select
+             Date
+            ,Low format=dollar12.2
+        from
+            btc_analytic_file
+        order by
+            Low
+        ;
+quit;
+
+proc sql;
+    create table analysis2 as
+        select
+            Low AS Buy_Low
+	     label "Buying at Low Price"
+           ,High AS Sell_High
+	     label "Selling at High Price" 
+           ,High - Low AS Difference format=dollar12.2
+	     label "Price Difference"
+           ,High / Low AS RateOfReturn format=percent12.2
+	     label "Rate of Return"
+        from
+            high_top10
+           ,low_bottom10
+        ;
+quit;
 
 * output the first 10 rows from high_top10 to display the top 10 High's only;
 title "Top 10 High's";
@@ -171,6 +246,27 @@ Limitations: Even though predictive modeling is specified in the research
 questions, this methodology solely relies on a crude descriptive technique
 by looking at a trend line and linear regression.
 ;
+
+* create analysis3 that uses to predict BTC High from Low price for
+  research question 3;
+proc sql;
+    create table analysis3 as
+        select
+            Date
+           ,High
+           ,Low
+           ,High - Low AS HighvsLow format=dollar12.2
+	     label "Difference between High and Low"
+           ,(High - Low) * 0.618 + Low AS ResistantLevel format=dollar12.2
+	     label "Price at Resistant Level"
+           ,(High - Low) * 0.382 + Low AS SupportLevel format=dollar12.2
+	     label "Price at Support Level"
+        from
+            btc_analytic_file
+        order by
+            Date descending
+        ;
+quit;
 
 * use proc corr to compute coefficients;
 proc corr

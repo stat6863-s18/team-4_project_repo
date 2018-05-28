@@ -191,13 +191,14 @@ proc sgplot data=analysis3;
     title "Price Prediction based on Resistant and Support Level From April 2018";
 run;
 
-* develop a predicted regression model for High based on Resistant Level;
+* RESISTANT LEVEL - develop a predicted regression model for High based on
+  Resistant Levels;
 * use proc reg to develop regression model (high = resistantlevel) that has an 
-  equation of Y = a + bX, where Y is dependent variable (High Variable) and
-  X is indenpendent variable (ResistantLevel Variable);
+  equation of Y = a + bX, where Y is a dependent variable (High variable) and
+  X is an indenpendent variable (ResistantLevel variable);
 proc reg
     data=analysis3;
-    model high = resistantlevel;
+    model High = ResistantLevel;
     ods output ParameterEstimates=PE1;
 run;
 
@@ -212,23 +213,24 @@ run;
 proc sgplot
     data=analysis3 noautolegend;
     title "Regression Line with Slope and Intercept - Resistant Level";
-    reg y=high x=resistantlevel;
+    reg y=High x=ResistantLevel;
     inset "Intercept = &Int" "Slope = &Slope" /
         border title="Parameter Estimates" position=topleft;
 run;                                                                                                                
 
 
-* develop a predicted regression model for High based on Resistant Level;
-* use proc reg to develop regression model (high = resistantlevel) that has an 
+* SUPPORT LEVEL -develop a predicted regression model for High based on
+  Support Levels;
+* use proc reg to develop regression model (high = supportlevel) that has an 
   equation of Y = a + bX, where Y is dependent variable (High Variable) and
   X is indenpendent variable (SuppportLevel Variable);
 proc reg
     data=analysis3;
-    model high = supportlevel;
+    model High = SupportLevel;
     ods output ParameterEstimates=PE2;
 run;
 
-* set PE1 to display the intercept and slope in the graph;
+* set PE2 to display the intercept and slope in the graph;
 data _null_;
     set PE2;
     if _n_ = 1 then call symput('Int', put(estimate, BEST6.));    
@@ -239,7 +241,7 @@ run;
 proc sgplot
     data=analysis3 noautolegend;
     title "Regression Line with Slope and Intercept - Support Level";
-    reg y=high x=supportlevel;
+    reg y=High x=SupportLevel;
     inset "Intercept = &Int" "Slope = &Slope" /
         border title="Parameter Estimates" position=topleft;
 run;

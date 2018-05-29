@@ -88,7 +88,7 @@ proc means
 run;
 
 *correlation between open and close price.;
-footnote justify=left
+footnote3 justify=left
 "Open and Close price is 99% correlated."
 ;
 proc corr data = btc_analytic_file_data1;

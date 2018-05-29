@@ -68,16 +68,12 @@ proc sgplot data = btc_analytic_file_data1;
     scatter x = Open y = Close / group = Year;
 run;
 
-title1 justify=left
-'Contents of data'
-;
+*Contents of data;
 proc contents 
     data= btc_analytic_file_data1;
 run;
 
-title1 justify=left
-'*Summary of Data for years'
-;
+*Summary of Data for years;
 proc means 
     data = btc_analytic_file_data1 n mean max min range std
     ;
@@ -91,16 +87,16 @@ proc means
     ;
 run;
 
-title1 justify=left
-'correlation between open and close price.'
-;
-
-footnote1 justify=left
+*correlation between open and close price.;
+footnote justify=left
 "Open and Close price is 99% correlated."
 ;
-Proc corr data = btc_analytic_file_data1;
-	var Open Close;
+proc corr data = btc_analytic_file_data1;
+    var Open Close;
 run;
+title:
+footnote;
+
 
 
 *******************************************************************************;
@@ -128,8 +124,8 @@ data
     btc_analytic_file_data2;
     set btc_analytic_file;
     Date = input(put(Date,8.),YYMMDD8.);
-    Year = YEAR(Date);
-    Month = Month(Date);
+    Year = year(Date);
+    Month = month(Date);
     format Date yymmdd10.;
 run;
 
@@ -148,30 +144,21 @@ proc sql;
         ;
 quit;
 
-title1 justify=left
+title justify=left
 'Time series plot of Volumne'
 ;
 
-footnote1 justify=left
-"Total volume in the year 2015 was around 1 crores."
+footnote justify=left
+"Total volume in the year 2015 was around 1 crores.In 2016, the Total volume went around 2 crores.
+In 2017, the Total volume went around 40000 crores.In 2018, the Total volume went around 45000 crores."
 ;
 
-footnote2 justify=left
-"In 2016, the Total volume went around 2 crores."
-;
-
-footnote3 justify=left
-"In 2017, the Total volume went around 40000 crores."
-;
-
-footnote4 justify=left
-"In 2018, the Total volume went around 45000 crores."
-;
-
-proc gplot data=btc_analytic_file_table02;
-    plot Year*Total_volume = 1;
+proc sgplot data=btc_analytic_file_table02;
+    scatter x = Year y = Total_volume;
     symbol1 v=star c=blue;
 run;
+title;
+footnote;
 
 
 *******************************************************************************;
@@ -208,9 +195,10 @@ proc sql;
 quit;
 
 * Creating time series plot;
-proc gplot data=btc_analytic_file_table03;
-    plot Date*Close = 1;
+proc sgplot data=btc_analytic_file_table03;
+    scatter x = Date y = Close;
     symbol1 v=star c=blue;
     title "Time Series Plot";
 run;
 title;
+footnote;

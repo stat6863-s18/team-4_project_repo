@@ -27,13 +27,12 @@ title2 justify=left
 ;
 
 footnote1 justify=left
-"Opening price and the closing price has the linear relationship."
+"Opening price and the closing price has the linear relationship.Generally, both price varies together."
 ;
 
 footnote2 justify=left
 "There is some fluctuation when the price is more than $11000."
 ;
-
 *
 Note: This comparison can be answered by comparing column open and column close
 from table btcusd16, btcusd17 and from btcusd18.
@@ -194,6 +193,9 @@ proc sql;
 quit;
 
 * Creating time series plot;
+footnote justify=left
+"In 2018, the closing price was started around 8000$ and In 2017, was around 2000$."
+;
 proc sgplot data=btc_analytic_file_table03;
     scatter x = Date y = Close;
     symbol1 v=star c=blue;

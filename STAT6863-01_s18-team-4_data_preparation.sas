@@ -329,7 +329,7 @@ data
     Date = input(put(Date,8.),YYMMDD8.);
     Year = year(Date);
     Month = month(Date);
-    Days = weekday(Date);
+    Day = weekday(Date);
     format Date yymmdd10.;
 run;
 

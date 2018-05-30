@@ -322,4 +322,15 @@ proc sort
     ;
 run;
 
+*Formatting Date;
+data 
+    btc_analytic_file_data1;
+    set btc_analytic_file;	
+    Date = input(put(Date,8.),YYMMDD8.);
+    Year = year(Date);
+    Month = month(Date);
+    Day = weekday(Date);
+    format Date yymmdd10.;
+run;
+
 

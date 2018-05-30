@@ -19,7 +19,7 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 
 
 title1 justify=left
-'Question: What is the difference between the open and closed price for Bitcoin?
+'Question: What is the difference between the open and closed price for Bitcoin?'
 ;
 
 title2 justify=left
@@ -31,7 +31,8 @@ footnote1 justify=left
 ;
 
 footnote2 justify=left
-"There is some fluctuation when the price is more than $11000."
+"There is some fluctuation when the price is more than $11000.Below $11000, plot of close and open price is very dense.Price is more than
+than 9000$ after 2018."
 ;
 *
 Note: This comparison can be answered by comparing column open and column close
@@ -87,7 +88,7 @@ proc means
 run;
 
 *correlation between open and close price.;
-footnote justify=left
+footnote3 justify=left
 "Open and Close price is 99% correlated."
 ;
 proc corr data = btc_analytic_file_data1;
@@ -142,11 +143,11 @@ proc sql;
         ;
 quit;
 
-title justify=left
+title3 justify=left
 'Time series plot of Volumne'
 ;
 
-footnote justify=left
+footnote1 justify=left
 "Total volume in the year 2015 was around 1 crores.In 2016, the Total volume went around 2 crores.
 In 2017, the Total volume went around 40000 crores.In 2018, the Total volume went around 45000 crores."
 ;
@@ -193,7 +194,7 @@ proc sql;
 quit;
 
 * Creating time series plot;
-footnote justify=left
+footnote1 justify=left
 "In 2018, the closing price was started around 8000$ and In 2017, was around 2000$."
 ;
 proc sgplot data=btc_analytic_file_table03;

@@ -189,6 +189,7 @@ title3 justify=left
 footnote1 justify=left
 "highly active market for bitcoin is on sunday, monday and saturday."
 ;
+
 proc sgplot data=btc_analytic_file_table03;
     scatter x = Day y = Close;
     symbol1 v=star c=blue;

@@ -328,6 +328,8 @@ data
     set btc_analytic_file;	
     Date = input(put(Date,8.),YYMMDD8.);
     Year = year(Date);
+    Month = month(Date);
+    Days = weekday(Date);
     format Date yymmdd10.;
 run;
 

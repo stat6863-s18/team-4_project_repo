@@ -162,6 +162,7 @@ proc sql;
     create table btc_analytic_file_table03 as
         select 
 	    Date
+	    ,Day
 	    ,Close 
 	from 
 	    btc_analytic_file

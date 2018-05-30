@@ -225,5 +225,26 @@ proc sgplot data=btc_analytic_file_table03;
     scatter x = Day y = Close;
     symbol1 v=star c=blue;
 run;
+
+*Timeseries data;
+proc timeseries data = btc_analytic_file_data1 
+			 out = timeseries;
+   id Date interval = day;
+   var Close Open;
+run;
+
+*Timeseries model;
+title3 justify=left
+"ARIMA(0,1,1)(0,1,1) model for closing price prediction"
+;
+
+footnote1 justify=left
+"95% Confidence interval of prediction."
+;
+proc arima data=timeseries;
+   identify var=Close(1,7) noprint;
+   estimate q=(1)(7) outest=estimates noprint;
+   forecast id=Date interval=day out=forecasts;
+quit;
 title;
 footnote;

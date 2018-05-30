@@ -165,7 +165,7 @@ proc sql;
 	    ,Day
 	    ,Close 
 	from 
-	    btc_analytic_file
+	    btc_analytic_file_data1
         ;
 quit;
 

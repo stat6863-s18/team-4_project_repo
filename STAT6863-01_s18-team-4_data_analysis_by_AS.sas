@@ -7,7 +7,7 @@
 * set relative file import path to current directory (using standard SAS trick);
 X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILENAME))))""";
 
-* load external file generating "analytic file" dataset btc_analytic_file, 
+* load external file generating "analytic file" dataset btc_analytic_file;
 %include '.\STAT6863-01_s18-team-4_data_preparation.sas';
 
 

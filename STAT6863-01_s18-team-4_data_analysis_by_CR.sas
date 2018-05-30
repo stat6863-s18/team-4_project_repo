@@ -19,11 +19,11 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 
 
 title1 justify=left
-'Question: What is the difference between the open and closed price for Bitcoin?'
+"Question: What is the trend of the open and closed price for Bitcoin?"
 ;
 
 title2 justify=left
-'Rationale: This will help us to understand the behavior of Bitcoin for a day.We can see the maximum increase or decrease in Bitcoin in a day'
+"Rationale: This will help us to understand the behavior of Bitcoin for a day.We can see the maximum increase or decrease in Bitcoin in a day"
 ;
 
 footnote1 justify=left
@@ -52,10 +52,37 @@ proc sgplot data = btc_analytic_file_data1;
 run;
 
 *Printing 10 observations;
-proc print data= btc_analytic_file_data1(obs = 10);
+title3 justify=left
+"printing 10 observation from datafile." 
+;
+
+footnote1 justify=left
+"10 observation of data"
+;
+
+proc report data= btc_analytic_file_data1(obs = 10);
 run;
 
 *Summary of Data for years;
+title3 justify=left
+"summary of data" 
+;
+
+footnote1 justify=left
+"In 2015, the 1unit  difference in standard deviation and Range can be observed."
+;
+
+footnote2 justify=left
+"In 2016, the 1 unit difference in mean, min and Range can be observed. and 2 unit in standard deviation." 
+;
+
+footnote3 justify=left
+"In 2017, 28 units difference in standard deviation. which means closing price and opening price is more scattered." 
+;
+
+footnote4 justify=left
+"In 2018, 5 unit difference in standard deviation because we don't have enough data." 
+;
 proc means 
     data = btc_analytic_file_data1 n mean max min range std
     ;
@@ -63,16 +90,20 @@ proc means
         Year
     ;
     var
-        Diff_open_Close
 	Open
 	Close
     ;
 run;
 
 *correlation between open and close price.;
+title3 justify=left
+"correlation between open and close price" 
+;
+
 footnote3 justify=left
 "Open and Close price is 99% correlated."
 ;
+
 proc corr data = btc_analytic_file_data1;
     var Open Close;
 run;

@@ -48,6 +48,7 @@ title3 justify=left
 footnote1 justify=left
 "10 observation of data"
 ;
+
 proc report data= btc_analytic_file_data1(obs = 10);
 run;
 
@@ -71,6 +72,7 @@ footnote3 justify=left
 footnote4 justify=left
 "In 2018, 5 unit difference in standard deviation because we don't have enough data." 
 ;
+
 proc means 
     data = btc_analytic_file_data1 n mean max min range std
     ;
@@ -204,7 +206,7 @@ Limitations: Model assumptions should be valid for prediction.
 
 Methodology: Use proc sort to create a temporary table with relevant data. Then
 use sgplot to create plot of closing price with respect to date and days. After that 
-I ran ARIMA(0,1,1)(0,1,1) model.
+I ran ARIMA(1,1,1) model.
 
 Followup Steps: We can try other time series model. I am using this model. As this
 is doing reasonable job for me.

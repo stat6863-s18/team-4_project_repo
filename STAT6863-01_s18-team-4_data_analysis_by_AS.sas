@@ -28,6 +28,14 @@ footnote1 justify=left
 "Top High Market Cap of Bitcoin were seen in Dec 2017 between Dec 15 and Dec 20."
 ;
 
+footnote2 justify=left
+"Highest Market Cap was seen on Dec 17,2017 when the market cap seen was 326141000000."
+;
+
+footnote3 justify=left
+"Highest Market Cap were seen 3 days between Dec 17 and Dec 20,2017"
+;
+
 *
 Note: This compares the column the column "MarketCap" from btcusd16 to the same
 name column from btcusd17 and btcusd18
@@ -83,9 +91,12 @@ title2 justify=left
 ;
 
 footnote1 justify=left
-"Top High Bitcoin prices are seen in Dec 2017."
+"Top High Bitcoin prices are seen in Dec 2017. Bitcoin saw its peak in 2017 December wherin the highest price seen was $20,089"
 ;
 
+footnote1 justify=left
+"Top 5 highest prices in Dec 2017 were in excess of $18,500"
+;
 *
 Note: This compares the column "High"  from btcusd16 to the same name columns 
 from btcusd17 and btcusd18.
@@ -124,6 +135,14 @@ footnote1 justify=left
 "Bottom lowest Bitcoin prices were seen between April and June 2015."
 ;
 
+footnote2 justify=left
+"Lowest Bitcoin price was seen on Aug 25,2015 when the price touched $199.57"
+;
+
+footnote3 justify=left
+"Lowest Bitcoin prices were seen between April and Auguest 2015 where the prices varied between $199 to $216"
+;
+
 *
 Note: This compares the column the column "Low" from btcusd16 to the same 
 name columns from btcusd17 and btcusd18.
@@ -140,7 +159,7 @@ proc print
         Date
     ;
     var
-        High
+        Low
     ;
 
 run;
@@ -160,7 +179,15 @@ title2 justify=left
 ;
 
 footnote1 justify=left
-"Highest ROI was observed when invested between  April and June 2015."
+"For the variable Buy_Lowest mean observed is 2387,std deviation is 3604, sum is 286735568 ,Minimum is 199.57 and maximum is 18974. This is been calculated using Simple Statistsics"
+;
+
+footnote2 justify=left
+"For the variable Sell_Highest mean observed is 2587,std deviation is 3995, sum is 3107905499 ,Minimum is 223.83 and maximum is 20089. This is been calculated using Simple Statistsics"
+;
+
+footnote3 justify=left
+"Using Pearson correlation coefficients, ROI for Sell_Highest equates to 0.74251 which is significant and this justifies that investing in Bitcoin could have yielded individual with highest return"
 ;
 
 *
@@ -173,8 +200,7 @@ data neither does it attempt to validate data in any way.
 
 * print Low and High Analysis;
 title "Low and High Analysis";
-proc print
-    data=raanalysis
-    noobs style(header)={just=c}
-    ;
+proc corr data=raanalysis ;
 run;
+title;
+footnote;

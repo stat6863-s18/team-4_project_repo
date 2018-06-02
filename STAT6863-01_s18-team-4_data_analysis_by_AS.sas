@@ -152,7 +152,7 @@ run;
 title;
 footnote;
 
-proc univariate data=btc_analytic_file;
+proc univariate data=btc_analytic_file noprint;
  histogram High;
 run;
 

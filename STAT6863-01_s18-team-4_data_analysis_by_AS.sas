@@ -29,7 +29,7 @@ footnote1 justify=left
 ;
 
 footnote2 justify=left
-"Highest Market Cap was seen on Dec 17,2017 when the market cap seen was 326141000000."
+"Highest Market Cap was seen on Dec 17,2017 when the market cap seen was 326141000000.Given the spike in magnitude of market cap in these couple of days it suggests the market sentiment towards bitcoin"
 ;
 
 footnote3 justify=left
@@ -44,8 +44,22 @@ Limitations: This methodology does not account for datasets with missing
 data neither does it attempt to validate data in any way.
 ;
 
+proc sql outobs=5;
+    create table Market_Cap_top5 as
+        select
+             Date
+            ,MarketCap format=dollar12.2
+        from
+            btc_analytic_file
+        order by
+            MarketCap descending
+        ;
+quit;
+
+* Print the top 5 Market Cap's  between April 2016- April 2018;
+title "Top 5 Market Cap's";
 proc print
-    data=MarketCap_top5_print
+    data=Market_Cap_top5
     noobs style(header)={just=c}
     ;
     id
@@ -54,7 +68,6 @@ proc print
     var
         MarketCap
     ;
-   
 run;
 title;
 footnote;
@@ -67,16 +80,19 @@ footnote1 justify=left
 "ScatterPlot of Bitcoin MarketCap by year."
 ;
 
+footnote1 justify=left
+"As seen in the scatterplot merics we can conclude that market interest in crytopcurrency was due to panic in stock market and other global news that triggered the event."
+;
 
-proc sgplot data=MarketCap_top5_print;
+proc sgplot data=Market_Cap_top5;
     scatter
         x=Date
         y=MarketCap
     ;
 	
 run;
-title;
-footnote;
+title1;
+footnote1;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -94,9 +110,8 @@ footnote1 justify=left
 "Top High Bitcoin prices are seen in Dec 2017. Bitcoin saw its peak in 2017 December wherin the highest price seen was $20,089"
 ;
 
-footnote1 justify=left
-"Top 5 highest prices in Dec 2017 were in excess of $18,500"
-;
+footnote2 justify=left
+"Top 5 highest prices in Dec 2017 were in excess of $18,500. If compared with other crypto currencies we can conclude that this was due to global panic and investors gloabally investing in crypto currency vs stocks and bonds";
 *
 Note: This compares the column "High"  from btcusd16 to the same name columns 
 from btcusd17 and btcusd18.
@@ -104,6 +119,24 @@ from btcusd17 and btcusd18.
 Limitations: This methodology does not account for datasets with missing 
 data neither does it attempt to validate data in any way.
 ;
+
+proc sql;
+    create table high_top5 as
+        select
+            Date
+            ,High format=dollar12.2
+        from
+             btc_analytic_file
+        order by
+            High descending
+        ;
+    create table high_top5_print as
+        select
+            *
+        from
+            high_top5(obs=5)
+        ;
+quit;
 
 proc print
     data=high_top5_print
@@ -118,6 +151,10 @@ proc print
 run;
 title;
 footnote;
+
+proc univariate data=btc_analytic_file;
+ histogram High;
+run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -143,6 +180,10 @@ footnote3 justify=left
 "Lowest Bitcoin prices were seen between April and Auguest 2015 where the prices varied between $199 to $216"
 ;
 
+footnote4 justify=left
+"This was the time as Bitcoin just started picking up.However people were skeptical as seen from data and that justifies the price fluctation during the same period"
+;
+
 *
 Note: This compares the column the column "Low" from btcusd16 to the same 
 name columns from btcusd17 and btcusd18.
@@ -150,6 +191,25 @@ name columns from btcusd17 and btcusd18.
 Limitations: This methodology does not account for datasets with missing 
 data neither does it attempt to validate data in any way.
 ;
+
+proc sql;
+    create table low_bottom5 as
+        select
+            Date
+            ,Low format=dollar12.2
+        from
+            btc_analytic_file
+        order by
+            Low
+        ;
+    create table low_bottom5_print as
+        select
+            *
+        from
+            low_bottom5(obs=5)
+        ;
+quit;
+
 
 proc print
     data=low_bottom5_print
@@ -199,8 +259,7 @@ data neither does it attempt to validate data in any way.
 
 
 * print Low and High Analysis;
-title "Low and High Analysis";
-proc corr data=raanalysis ;
+proc corr data=btc_analytic_file ;
 run;
 title;
 footnote;

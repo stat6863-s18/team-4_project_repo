@@ -26,75 +26,76 @@ title2 justify=left
 ;
 
 footnote1 justify=left
-"Based on our analysis and the output of the HIGH-MARKET CAP FROM 2015 TO 2018 table, we can see there is a huge difference in Bitcoin price which is about $19,865.17 USD between the MIN ($223.83 in Obs 9) and MAX ($20089.00 in Obs 986) of the High Variable."
+"Based on the output, we can see the minimum price is $223.83 (in Obs=9) and the maximum price is $20089.00 (in Obs=986) of the High Variable. The difference between these 2 values is $19.865.17 from April 2015 to December 2017 which pretty tell there is a huge increase in Bitcoin in 2.5 years."
 ;
 
 footnote2 justify=left
-"In other words, Bitcoin price has been increasing approximately 8,975% or the Rate-of-Return (ROR) on the investment over a specified time period is 8,975%. Assuming if one invested $1 on April 15, 2015 and decided to cash out on December 17, 2017, then he/she would have earned almost $8,975."
+"To have a better understanding of this, we're going to compute a rate of return by using a formula of ROR = ((current value - original value) / original value) * 100%"
+;
+footnote3 justify=left
+"As we can see, it turns out that the Bitcoin price has been tremendously increased at very high levels and the Rate-of-Return (ROR) on the investment over a specified time period from 04/15/2015 until 12/17/2017 is 8,875.12%."
+;
+
+footnote4 justify=left
+"Assuming if one invested $1 on April 15, 2015 and decided to cash out on December 17, 2017, then he or she would have earned almost $88.75 for each dollar invested."
 ;
 
 *
-Note: This compares the column "High" from btcusd16 to the same
+Note: This compares the column "High" and "Low" from btcusd16 to the same
 name column from btcusd17 and btcusd18.
 
 Limitations: This methodology does not account for any datasets with missing 
-data nor does it attempt to validate data in any way.
+data nor does it attempt to validate data in any way. We investigate and
+analyze BTC values from April 7, 2015 to April 6, 2018 only.
+
+Methodology: 
+(1) use proc sort to create a temporary sorted table 'analytic_file1'.
+(2) use proc report to output the minimum, median, and maximum of the sorted
+table, and compute a price difference between the min and max value, as well as 
+a rate or return.
+
+Follow-up Steps: More carefully clean values in order to filter out any possible
+illegal values, and better handle missing data, e.g., by using a previous year's
+data...
 ;
 
-* summarize the data distribution;
-proc univariate
-    data=btc_analytic_file;
-    var High;
-    histogram High;
-run;
-quit;
-
-* create analysis1 to analyze a rate or return for research question 1;
-* use means procedure and create btc_analytic_file_temp table to calculate 
-  descriptive statistics;
-proc means
-        min max mean std
-        noprint 
-        data=btc_analytic_file
-    ;
-    var
-        High
-        MarketCap
-    ;
-    output
-        out=btc_analytic_file_temp(drop=_type_ _freq_
-                                  rename=(_stat_ = STAT)
-                                  )
-    ;
+* use proc sort to create a temporary sorted table analytic_file1;
+proc sort
+    data=btc_analytic_file
+    out=analytic_file1;
+    by Date;
 run;
 
-* remove ($) sign from N which is the sample size;
-data analysis1;
-    set btc_analytic_file_temp;
-        array nValue[2] High MarketCap;      
-        /* numerical variables */
-        array cValue[2] $20.2;                      
-        /* cValue[i] is formatted version of nValue[i] */
-        label cValue1="High" cValue2="MarketCap";
-    do i = 1 to dim(nValue);
-        select (STAT);
-            when ('N')    cValue[i] = put(nvalue[i], 8.0);
-            otherwise     cValue[i] = vvalue(nvalue[i]);
-        end;
-    end;
-run;
 
-* print out analysis1 to address the research question;
-title 'HIGH - MARKET CAP FROM APRIL, 2015 TO APRIL, 2018';
-proc print
-    data=analysis1
-    noobs label
-    style(header)={just=c};
-    label MarketCap='Market Cap';
-    var STAT
-        cValue:
-        /style(data)={just=r}
-    ;
+* use proc report to output the minimum, median, and maximum of the sorted
+  table, and compute a price difference between the min and max value, as 
+  well as a rate or return ROR = (current value - original value) / original
+  value);
+proc report data=btc_analytic_file out=analytic_file1;
+    columns
+        High = High_Min
+        High = High_Median
+        High = High_Max
+        Diff
+        ROR
+    ;  
+    define High_Min / min "Minimum Price";
+    define High_Median / mean "Median Price";
+    define High_Max / max "Maximum Price";
+
+    /* define and compute a price difference between max and min value */ 
+    define Diff / display format=dollar12.2;
+    define Diff / computed "Min-Max Difference";
+    compute Diff;
+        Diff = High_Max - High_Min;
+    endcomp;
+   
+    /* define and compute a rate of return */ 
+    define ROR / display format=percent10.2;
+    define ROR / computed "Rate of Return";
+    compute ROR;
+        ROR = ((High_Max - High_Min)/High_Min);
+    endcomp;
 run;
 
 * clear titles/footnotes;
@@ -106,23 +107,13 @@ footnote;
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
 title1 justify=left
 'Research Question 2: What are the top 10 highest prices and top 10 lowest prices during these years?'
 ;
 
 title2 justify=left
 'Rationale: This would provide more BTC behaviors, movements and how importance of High and Low price affect a rate of return.'
-
-footnote1 justify=left
-"From the analysis in research question 1, we see that if that investor put $1 in at the highest price and could earn $8,975. Feel luckly enough? But what if he/she followed the golden rule of buy low sell high and put $1 in at the lowest price of $199.57, instead of at the highest price of $223.83? The answer is he/she could earn $10,066 or gain 10,066%."
-;
-
-footnote2 justify=left
-"As we can see, the rate of return of this scenario is even higher. The differece between these two scenarios is $1,091, with just one dollar investment. In other words, that crypto investor could earn $1,091 or 12.15% extra on top of their $8,975. Say that he put in $10, the number could be $10,091, so can we imagine what the return is if the intial invesment was $100 or $1,000?"
-;
-
-footnote3 justify=left
-"This analysis addresses the importance of High and Low price that crypto enthusiasts and long-term speculators would consider and how that afftect the rate of return."
 ;
 
 *
@@ -131,9 +122,26 @@ same name columns from btcusd17 and btcusd18.
 
 Limitations: This methodology does not account for any datasets with missing 
 data nor does it attempt to validate data in any way.
+
+Methodology: 
+(1) use proc sql to create 2 temporary sorted tables: 'high_top10' is ordered
+by High descending, and 'low_bottom10' is order by Low ascending. Both sorted
+tables are limited by 10 oberservations.
+
+(2) use proc sql to combine 2 sorted tables above as an 'analytic_file2' and
+then analyze benefits of 'buy low, sell high'.
+
+(3) use proc print to display the first twenty rows of the 'analytic_file2'
+dataset. This dataset has 100 rows in total. 
+
+Follow-up Steps: More carefully clean values in order to filter out any possible
+illegal values, and better handle missing data, e.g., by using a previous year's
+data...
 ;
 
-* sort by descending High with 10 obs only;
+* (1a) use proc sql to create a sorted tables 'high_top10' order by High
+  descending, output with 10 obs only;
+
 proc sql outobs=10;
     create table high_top10 as
         select
@@ -146,21 +154,16 @@ proc sql outobs=10;
         ;
 quit;
 
-* output the first 10 rows from high_top10 to display the top 10 High's only;
-title "Top 10 High's";
 proc print
     data=high_top10
-    noobs style(header)={just=c}
-    ;
-    id
-        Date
-    ;
-    var
-        High
+    style(header)={just=c}
     ;
 run;
 
-* sort by Low with 10 obs only;
+
+* (1b) use proc sql to create a sorted tables 'low_bottom10' order by Low
+  ascending, output with 10 obs only;
+
 proc sql outobs=10;
     create table low_bottom10 as
         select
@@ -173,43 +176,62 @@ proc sql outobs=10;
         ;
 quit;
 
-* output the first 10 rows from low_bottom10 to display the bottom 10 Low's only;
-title "Bottom 10 Low's";
 proc print
     data=low_bottom10
-    noobs style(header)={just=c}
-    ;
-    id
-        Date
-    ;
-    var
-        Low
+    style(header)={just=c}
     ;
 run;
 
-* create analysis2 to analyze 'buy low, sell high' for research question 2;
+
+
+* (2) use proc sql to combine 2 sorted tables above,
+  create a sorted table 'analytic_file2' to analyze 'buy low, sell high';
+
 proc sql;
-    create table analysis2 as
+    create table analytic_file2 as
         select
             Low AS Buy_Low
-	     label "Buying at Low Price"
+            label "Buying at Low Price"
            ,High AS Sell_High
-	     label "Selling at High Price" 
+            label "Selling at High Price" 
            ,High - Low AS Difference format=dollar12.2
-	     label "Price Difference"
-           ,High / Low AS RateOfReturn format=percent12.2
-	     label "Rate of Return"
+            label "Price Difference"
+           ,(High - Low)/Low AS RateOfReturn format=percent12.2
+            label "Rate of Return"
         from
             high_top10
            ,low_bottom10
         ;
 quit;
 
-* print out analysis2 to address 'buy low, sell high' for research question;
-title "Buy Low Sell High Analysis";
+
+
+* (3) use proc print to display the first twenty rows of the 'analytic_file2'
+dataset to answer research question. This dataset originally has 100 rows;
+
+footnote1 justify=left
+"From the analysis in research question 1, we know that if that investor put $1 in at the highest price and he could earn $88.75"
+;
+
+footnote2 justify=left
+"Feel lucky enough? But what if he or she applied the golden rule of 'buy low sell high' and put $1 in at the lowest price of $199.57 in an exchange of 1 Bitcoin (obs=1), instead of at the high price? The answer is the rate of return that he or she could gain would be 9,966.14%."
+;
+
+footnote3 justify=left
+"What that means is if he put $1 in at the position of 'buy-low' where obs=1, he could gain $10.91 more, on top of $88.75. But if he put $1 in at obs=2, this time he would earn a bit less since the rate of return was 9,446.19%. The difference between obs=1 and 2 is ~520%. The higher price he bought, the less he could earn." 
+;
+
+footnote4 justify=left
+"This was one dollar investment. Say that he put in $10, the return would be $100.91, so can we imagine what the return is if the intial invesment was $100 or $1,000?"
+;
+
+footnote5 justify=left
+"This analysis addresses the importance of High and Low price that crypto enthusiasts and long-term speculators would consider and how that afftect the rate of return."
+;
+
 proc print
-    data=analysis2
-    noobs style(header)={just=c}
+    data=analytic_file2(obs=20)
+    style(header)={just=c}
     ;
 run;
 
@@ -224,47 +246,68 @@ footnote;
 *******************************************************************************;
 
 title1 justify=left
-'Research Question 3: Can we use Fibnonacci Retracement, which is created by taking two extreme points usually a major peak and trough on a financial chart and dividing the vertical distance by the key Fibonacci ratios of 38.2% (support level) and 61.8% (resistant level), to predict High prices?'
+'Research Question 3: From the analysis above, it is very important to determine and predict the low price position to buy-in as lowest as possible.
+Can we use Fibnonacci Retracement ratios of 38.2% (support level) and 61.8% (resistant level) to predict Bitcoin Low prices?'
 ;
 
 title2 justify=left
-'Rationale: This would provide more true understanding of Bitcoin behaviors and movements to forecast or predict the BTC price for the year of 2018.'
-
-footnote1 justify=left
-"Based on the Pearson correlation coefficient output, we see both Resistant Level and Support Level have a positive linear relationship of 0.999 and both levels have the p-value of 0.0001."
-;
-
-footnote2 justify=left
-"In this case, p-value is smaller than alpha of 0.05 or 5% so High shows significant correlation with Resistant Level and Support Level. For that reason, we can conclude that Resistant Level and Support Level can be used to predict Bitcoin High prices. The graph of Price Prediction based on Resistant and Support Level where Date_ID is from April 2018 illustrates how these variables are correlated"
-;
-
-footnote3 justify=left
-"Based on the Parameter Estimates outputs, we're able to develop the linear regression line that has an equation of Y = a + bX, where X is the explanatory variable and Y is the dependent variable (High variable in this case). The slope of the line is b and a is the intercept. The High values can be interpreted as High = -21.57 + 1.0391 * (ResistantLevel) or High = -34.24 + 1.0641 * (SupportLevel)"
+'Rationale: This would provide more true understanding of Bitcoin behaviors and movements to forecast or predict the BTC price in the future.'
 ;
 
 *
-Note: This compares the column "High" from pred_highfromlow to 
+Note: This compares the column "Low" from btc_analytic_file to 
 the "ResistantLevel" and "SupportLevel" columns in the same table.
 
 Limitations: Even though predictive modeling is specified in the research
-questions, this methodology solely relies on a crude descriptive technique
-by looking at a trend line and linear regression.
+questions, this methodology solely relies on Fibonacci Retracement ratios of
+38.2% and 61.8%. Fibonacci retracement is a method of technical analysis for 
+determining support and resistance levels. These ratios often used by stock 
+analysts approximates to the "golden ratio". 
+
+Methodology: 
+(1) use proc sql to create a sorted table 'analytic_file3' and then compute
+support levels and resistant levels based on Fibonacci Retracement ratios.
+
+(2) use proc corr to compute coefficients and perform a correlation analysis,
+then use proc sgplot to display stats graphics.
+
+(3) use proc reg to develop and formulate a linear regression model for 
+predicted prices based on resistant levels. Using a regression equation of 
+Y = a + bX, where Y is a dependent variable (Low variable) and X is an
+indenpendent variable (ResistantLevel variable). Then use proc sgplot to
+display the slope and intercept of the predicted line.
+
+(4) use proc reg to develop and formulate a linear regression model for 
+predicted prices based on support levels. Using a regression equation of 
+Y = a + bX, where Y is a dependent variable (Low variable) and X is an
+indenpendent variable (SupportLevel variable). Then use proc sgplot to
+display the slope and intercept of the predicted line.
+
+(5) use proc report to display a test.
+
+Follow-up Steps: A possible follow-up to this approach is to monitor real-time
+Bitcoin price in a few days and use other formal inferential techniques,
+possibly use proc timeseries or a sine function y=sinx (a sine wave that 
+oscillates, moves up, down or side-to-side periodically) to determine and 
+formulate a new formula.
 ;
 
-* create analysis3 that uses to predict BTC High from Low price for
-  research question 3;
+
+* (1) use proc sql to create a sorted table 'analytic_file3' and compute
+  support levels and resistant levels based on Fibonacci Retracement ratios;
+
 proc sql;
-    create table analysis3 as
+    create table analytic_file3 as
         select
             Date
            ,High
            ,Low
            ,High - Low AS HighvsLow format=dollar12.2
-	     label "Difference between High and Low"
+            label "Difference between High and Low"
            ,(High - Low) * 0.618 + Low AS ResistantLevel format=dollar12.2
-	     label "Price at Resistant Level"
+            label "Price at Resistant Level"
            ,(High - Low) * 0.382 + Low AS SupportLevel format=dollar12.2
-	     label "Price at Support Level"
+            label "Price at Support Level"
         from
             btc_analytic_file
         order by
@@ -272,16 +315,35 @@ proc sql;
         ;
 quit;
 
-* use proc corr to compute coefficients;
-proc corr
-    data=analysis3;
-    var High;
+
+
+* (2a) use proc corr to compute coefficients;
+
+footnote1 justify=left
+"Based on the Pearson correlation coefficient output, we see both Resistant Level and Support Level have a positive linear relationship of 0.999 and both levels have the p-value of 0.001"
+;
+
+footnote2 justify=left
+"In this case, p-value is smaller than alpha of 0.05 or 5% so Low shows significant correlation with Resistant Level and Support Level. For that reason, we can conclude that Resistant Level and Support Level can be used to predict Bitcoin prices."
+;
+
+proc corr 
+    data=analytic_file3 nosimple;
+    var Low;
     with ResistantLevel;
     with SupportLevel;
 run;
+footnote;
 
-* use proc sgplot to display stat graphics;
-proc sgplot data=analysis3;
+
+
+* (2b) use proc sgplot to display stats graphics;
+
+footnote justify=left
+"The graph of Price Prediction is based on Resistant and Support Level illustrates how these variables are correlated. Date is limited from April 2018."
+;
+
+proc sgplot data=analytic_file3;
     series x=Date y=High / legendlabel="High";
     series x=Date y=Low / legendlabel="Low";
     series x=Date y=ResistantLevel / legendlabel="Resistant Level";
@@ -290,64 +352,145 @@ proc sgplot data=analysis3;
     where Date > 20180400;
     title "Price Prediction based on Resistant and Support Level From April 2018";
 run;
+footnote;
 
-* RESISTANT LEVEL - develop a predicted regression model for High based on
-  Resistant Levels;
-* use proc reg to develop regression model (high = resistantlevel) that has an 
-  equation of Y = a + bX, where Y is a dependent variable (High variable) and
+
+* (3a) use proc reg to develop and formulate a linear regression model for 
+  predicted prices based on resistant levels' values;
+* regression model (low = resistantlevel) that has an 
+  equation of Y = a + bX, where Y is a dependent variable (Low variable) and
   X is an indenpendent variable (ResistantLevel variable);
+
+title 
+"Develop a predicted regression model for Low based on Resistant Levels"
+;
+
+footnote1 justify=left
+"Based on the Parameter Estimates outputs, we're able to develop the linear regression line that has an equation of Y = a + bX, where X is the explanatory variable and Y is the dependent variable (Low variable in this case)"
+;
+
+footnote2 justify=left
+"a is the intercept, and b is the slope of the line. The Low values can be interpreted as Low = 34.89092 + 0.93681 * (ResistantLevel)"
+;
+
 proc reg
-    data=analysis3;
-    /* noprint option can be used to suppress the output */
-    model High = ResistantLevel;
-    ods output ParameterEstimates=PE1;
+    data=analytic_file3 noprint;
+    /* remove simple stats table with noprint option */
+    model Low = ResistantLevel;
 run;
 
-* set PE1 to display the intercept and slope in the graph;
-data _null_;
-    set PE1;
-    if _n_ = 1 then call symput('Int', put(estimate, BEST6.));    
-    else            call symput('Slope', put(estimate, BEST6.));  
-run;
 
-* display the slope and intercept of a regression line - resistant level;
+
+* (3b) display the slope and intercept of a regression line - resistant level;
+
 proc sgplot
-    data=analysis3 noautolegend;
+    data=analytic_file3 noautolegend;
     title "Regression Line with Slope and Intercept - Resistant Level";
-    reg y=High x=ResistantLevel;
-    inset "Intercept = &Int" "Slope = &Slope" /
-        border title="Parameter Estimates" position=topleft;
-run;                                                                                                                
-
-
-* SUPPORT LEVEL -develop a predicted regression model for High based on
-  Support Levels;
-* use proc reg to develop regression model (high = supportlevel) that has an 
-  equation of Y = a + bX, where Y is dependent variable (High Variable) and
-  X is indenpendent variable (SuppportLevel Variable);
-proc reg
-    data=analysis3;
-    /* noprint option can be used to suppress the output */
-    model High = SupportLevel;
-    ods output ParameterEstimates=PE2;
-run;
-
-* set PE2 to display the intercept and slope in the graph;
-data _null_;
-    set PE2;
-    if _n_ = 1 then call symput('Int', put(estimate, BEST6.));    
-    else            call symput('Slope', put(estimate, BEST6.));  
-run;
-
-* display the slope and intercept of a regression line - support level;
-proc sgplot
-    data=analysis3 noautolegend;
-    title "Regression Line with Slope and Intercept - Support Level";
-    reg y=High x=SupportLevel;
-    inset "Intercept = &Int" "Slope = &Slope" /
+    reg y=Low x=ResistantLevel;
+    /* intercept and slope value are computed from proc reg */
+    inset "Intercept = 34.89092" "Slope = 0.93681" /
         border title="Parameter Estimates" position=topleft;
 run;
 
 * clear titles/footnotes;
 title;
 footnote;
+
+
+
+* (4a) use proc reg to develop and formulate a linear regression model for 
+  predicted prices based on support levels's values;
+* regression model (low = resistantlevel) that has an 
+  equation of Y = a + bX, where Y is a dependent variable (Low variable) and
+  X is an indenpendent variable (SupportLevel variable);
+
+title 
+"Develop a predicted regression model for Low based on Support Levels"
+;
+
+footnote1 justify=left
+"Based on the Parameter Estimates outputs, we're able to develop the linear regression line that has an equation of Y = a + bX, where X is the explanatory variable and Y is the dependent variable (Low variable in this case)"
+;
+
+footnote2 justify=left
+"a is the intercept, and b is the slope of the line. The Low values can be interpreted as Low = 21.16265 + 0.96036 * (SupportLevel)"
+;
+
+proc reg
+    data=analytic_file3 noprint;
+    /* remove simple stats table with noprint option*/
+    model Low = SupportLevel;
+run;
+
+
+
+* (4b) display the slope and intercept of a regression line - support level;
+
+proc sgplot
+    data=analytic_file3 noautolegend;
+    title "Regression Line with Slope and Intercept - Support Level";
+    reg y=Low x=SupportLevel;
+    /* intercept and slope value are computed from proc reg */
+    inset "Intercept = 21.16265" "Slope = 0.96036" /
+        border title="Parameter Estimates" position=topleft;
+run;
+
+* clear titles/footnotes;
+title;
+footnote;
+
+
+
+* (5a) please input x1 and x2 as an estimated resistant and support level;
+
+data low_prediction;
+	
+    x1 = 10000;
+    x2 = 9000;
+
+    /* Low = 34.89092 + 0.93681 * (ResistantLevel)
+       Low = 21.16265 + 0.96036 * (SupportLevel) */
+    y1 = 34.89092 + 0.93681 * (x1);
+    y2 = 21.16265 + 0.96036 * (x2);
+     
+	put "The predicted low is in the range of : " y1 y2;
+run;
+
+
+
+* (5b) use proc report to define and print out the testing;
+title 
+"Buy Low Prediction"
+;
+
+footnote justify=left
+"By developing a predicted regression model and applying Fibonacci Retracement Ratios, assuming the price is at $9,000, we're able to conclude that the predicted price that would be in the range from $8,664.40 to $9,402.99 where $8,664.40 is represented a predicted low price at support level and $9,402.99 is represented a predicted low price at resistant level.
+"
+;
+
+proc report data=low_prediction;
+    columns    
+        x1
+        x2
+        y1
+        y2
+    ;  
+    define x1 / "X1, Estimated Price at Resistant Level";
+    define x1 / display format=dollar12.2;
+
+    define x2 / "X2, Estimated Price at Support Level";
+    define x2 / display format=dollar12.2;
+
+    define y1 / "Predicted Low Price at Resistant Level";
+    define y1 / display format=dollar12.2;
+
+    define y2 / "Predicted Low Price at Support Level";
+    define y2 / display format=dollar12.2;
+run;
+
+* clear titles/footnotes;
+title;
+footnote;
+
+
+

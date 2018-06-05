@@ -48,30 +48,20 @@ Limitations: This methodology does not account for any datasets with missing
 data nor does it attempt to validate data in any way. We investigate and
 analyze BTC values from April 7, 2015 to April 6, 2018 only.
 
-Methodology: 
-(1) use proc sort to create a temporary sorted table 'analytic_file1'.
-(2) use proc report to output the minimum, median, and maximum of the sorted
-table, and compute a price difference between the min and max value, as well as 
-a rate or return.
+Methodology: use proc report to output the minimum, median, and maximum of the 
+sorted table, and compute a price difference between the min and max value, 
+as well as a rate or return.
 
 Follow-up Steps: More carefully clean values in order to filter out any possible
 illegal values, and better handle missing data, e.g., by using a previous year's
 data...
 ;
 
-* use proc sort to create a temporary sorted table analytic_file1;
-proc sort
-    data=btc_analytic_file
-    out=analytic_file1;
-    by Date;
-run;
-
-
 * use proc report to output the minimum, median, and maximum of the sorted
   table, and compute a price difference between the min and max value, as 
   well as a rate or return ROR = (current value - original value) / original
   value);
-proc report data=btc_analytic_file out=analytic_file1;
+proc report data=btc_analytic_file out=analytic_file;
     columns
         High = High_Min
         High = High_Median

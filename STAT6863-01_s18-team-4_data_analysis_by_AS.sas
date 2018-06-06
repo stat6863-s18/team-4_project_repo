@@ -42,6 +42,14 @@ name column from btcusd17 and btcusd18
 
 Limitations: This methodology does not account for datasets with missing 
 data neither does it attempt to validate data in any way.
+
+Methodology: The procedure PROC SQL is used to process the SQL statements.
+This procedure can not only give back the result of an SQL query, it can 
+also create SAS tables & variables. We will select Date and MarketCap 
+from btc_analytic file and then use proc print to print the values
+
+Followup Steps: More carefully clean values in order to filter out any possible
+illegal values, and better handle missing data.
 ;
 
 proc sql outobs=5;
@@ -118,6 +126,14 @@ from btcusd17 and btcusd18.
 
 Limitations: This methodology does not account for datasets with missing 
 data neither does it attempt to validate data in any way.
+
+Methodology: The procedure PROC SQL is used to process the SQL statements.
+This procedure can not only give back the result of an SQL query, it can 
+also create SAS tables & variables. We will select Date and High 
+from btc_analytic file and then use proc print to print the values
+
+Followup Steps: More carefully clean values in order to filter out any possible
+illegal values, and better handle missing data.
 ;
 
 proc sql;
@@ -190,6 +206,14 @@ name columns from btcusd17 and btcusd18.
 
 Limitations: This methodology does not account for datasets with missing 
 data neither does it attempt to validate data in any way.
+
+Methodology: The procedure PROC SQL is used to process the SQL statements.
+This procedure can not only give back the result of an SQL query, it can 
+also create SAS tables & variables. We will select Date and Low 
+from btc_analytic file and then use proc print to print the values
+
+Followup Steps: More carefully clean values in order to filter out any possible
+illegal values, and better handle missing data.
 ;
 
 proc sql;

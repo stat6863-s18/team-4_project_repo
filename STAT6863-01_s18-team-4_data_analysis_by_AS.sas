@@ -65,17 +65,9 @@ proc sql outobs=5;
 quit;
 
 * Print the top 5 Market Cap's  between April 2016- April 2018;
-title "Top 5 Market Cap's";
-proc print
-    data=Market_Cap_top5
-    noobs style(header)={just=c}
-    ;
-    id
-        Date
-    ;
-    var
-        MarketCap
-    ;
+proc report data=Market_Cap_top5(obs=5);
+     define Date / display;
+     define MarketCap / display;
 run;
 title;
 footnote;
@@ -279,6 +271,12 @@ Note: This takes a diff between top 5 high and low prices.
 
 Limitations: This methodology does not account for datasets with missing 
 data neither does it attempt to validate data in any way.
+
+Methodology: SAS provides the procedure PROC CORR to find the correlation 
+coefficients between a pair of variables in a dataset.
+
+Followup Steps: More carefully clean values in order to filter out any possible
+illegal values, and better handle missing data.
 ;
 
 

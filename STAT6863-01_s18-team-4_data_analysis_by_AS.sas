@@ -52,7 +52,7 @@ Followup Steps: More carefully clean values in order to filter out any possible
 illegal values, and better handle missing data.
 ;
 
-proc sql outobs=5;
+proc sql inobs=5;
     create table Market_Cap_top5 as
         select
              Date
@@ -140,7 +140,7 @@ proc sql;
         ;
     create table high_top5_print as
         select
-            *
+            Date,High
         from
             high_top5(obs=5)
         ;
@@ -169,7 +169,7 @@ footnote1 justify=left
 ;
 
 proc univariate data=btc_analytic_file noprint;
- histogram High;
+    histogram High;
 run;
 
 *******************************************************************************;
@@ -274,6 +274,10 @@ footnote3 justify=left
 "Using Pearson correlation coefficients, ROI for Sell_Highest equates to 0.74251 which is significant and this justifies that investing in Bitcoin could have yielded individual with highest return"
 ;
 
+footnote3 justify=left
+"Using Pearson correlation coefficients, we can see there is a very strong correlation between High and Low Values."
+;
+
 *
 Note: This takes a diff between top 5 high and low prices.
 
@@ -290,6 +294,7 @@ illegal values, and better handle missing data.
 
 * print Low and High Analysis;
 proc corr data=btc_analytic_file ;
+    var High Low Close MarketCap;
 run;
 title;
 footnote;

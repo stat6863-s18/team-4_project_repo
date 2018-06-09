@@ -52,8 +52,8 @@ footnote1 justify=left
 proc report data= btc_analytic_file_data1(obs = 5);
     columns 
         Date 
-	   Open
-	   Close
+	Open
+	Close
 run;
 
 *Summary of Data for years;

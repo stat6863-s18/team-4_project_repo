@@ -49,7 +49,7 @@ footnote1 justify=left
 "10 observation of data"
 ;
 
-proc report data= btc_analytic_file_data1(obs = 10);
+proc report data= btc_analytic_file_data1(obs = 5);
     columns 
         Date 
 	   Open

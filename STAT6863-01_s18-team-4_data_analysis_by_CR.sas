@@ -49,11 +49,11 @@ footnote1 justify=left
 "10 observation of data"
 ;
 
-proc report data= btc_analytic_file_data1(obs = 5);
+proc report data= btc_analytic_file_data1(obs = 10);
     columns 
-        Date 
-	Open
-	Close
+        Open 
+        Close
+;
 run;
 
 *Summary of Data for years;

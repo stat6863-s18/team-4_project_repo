@@ -67,7 +67,7 @@ quit;
 * Print the top 5 Market Cap's  between April 2016- April 2018;
 proc report data=Market_Cap_top5(obs=5);
      define Date / display;
-     define MarketCap / display;
+     define MarketCap / display format=comma20.;
 run;
 title;
 footnote;
@@ -84,7 +84,7 @@ footnote1 justify=left
 "As seen in the scatterplot merics we can conclude that market interest in crytopcurrency was due to panic in stock market and other global news that triggered the event."
 ;
 
-proc sgplot data=Market_Cap_top5;
+proc sgplot data=btc_analytic_file;
     scatter
         x=Date
         y=MarketCap
@@ -159,6 +159,14 @@ proc print
 run;
 title;
 footnote;
+
+title1 justify=left
+'Histogram between years 2015-2018'
+;
+
+footnote1 justify=left
+"70 % of bitcoin price was in between 0-$750 and 10% between $750 and $3750"
+;
 
 proc univariate data=btc_analytic_file noprint;
  histogram High;

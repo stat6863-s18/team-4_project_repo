@@ -49,7 +49,11 @@ footnote1 justify=left
 "10 observation of data"
 ;
 
-proc report data= btc_analytic_file_data1(obs = 10);
+proc report data= btc_analytic_file_data1(obs = 5);
+    columns 
+        Date 
+	Open
+	Close
 run;
 
 *Summary of Data for years;
@@ -225,7 +229,7 @@ footnote2 justify=left
 "The plot is not stationary. it has trend component which suggests differencing of series."
 ;
 
-proc sgplot data=btc_analytic_file_table03;
+proc sgplot data=btc_analytic_file_data1;
     scatter x = Date y = Close;
     symbol1 v=star c=blue;
 run;
@@ -237,7 +241,7 @@ title3 justify=left
 footnote1 justify=left
 "highly active market for bitcoin is on sunday, monday and saturday."
 ;
-proc sgplot data=btc_analytic_file_table03;
+proc sgplot data=btc_analytic_file_data1;
     scatter x = Day y = Close;
     symbol1 v=star c=blue;
 run;

@@ -19,7 +19,7 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 
 
 title1 justify=left
-"Question: What is the trend of the open and closed price for Bitcoin?"
+"Question: What is the relationship between the open and closed price for Bitcoin?"
 ;
 
 title2 justify=left
@@ -39,22 +39,6 @@ use proc means to get summary of closing and opening price by year.
 Followup Steps: Then plotted closing and opening price to see the trend of price. 
 followed by the correlation coefficient of closing and opening price.
 ;
-
-*Printing 10 observations;
-title3 justify=left
-"printing 10 observation from datafile." 
-;
-
-footnote1 justify=left
-"10 observation of data"
-;
-
-proc report data= btc_analytic_file_data1(obs = 10);
-    columns 
-        Open 
-        Close
-;
-run;
 
 *Summary of Data for years;
 title3 justify=left
@@ -89,6 +73,7 @@ proc means
     ;
 run;
 
+title;
 * Scatter plot of open and closed price of Bitcoin by year,addressing research question;
 footnote1 justify=left
 "Opening price and the closing price has the linear relationship.Generally, both price varies together."
@@ -116,7 +101,11 @@ title3 justify=left
 ;
 
 footnote3 justify=left
-"Open and Close price is 99% correlated."
+"Open and Close are normally distributed."
+;
+
+footnote3 justify=left
+"As p-value is significant, we can conclude that open and close price is highly positively correlated."
 ;
 
 proc corr data = btc_analytic_file_data1;
@@ -156,7 +145,8 @@ inferential technique like time seiers model.
 proc sql;
     create table btc_analytic_file_table02 as
         select 
-	    Year
+	    Date
+	    ,Year
 	    ,Month
 	    ,sum(Volumn) as Total_volume
 	from 
@@ -172,16 +162,16 @@ title3 justify=left
 ;
 
 footnote1 justify=left
-"Total volume in the year 2015 was around 1 crores.In 2016, the Total volume went around 2 crores."
+"Total volume in the year 2015 was around $10 millions.In 2016, the Total volume went around $20 millions."
 ;
 
 footnote2 justify=left
-"In 2017, the Total volume went around 40000 crores.In 2018, the Total volume went around 45000 crores."
+"In 2017, the Total volume went around $400000 million.In 2018, the Total volume went around $450000 millions."
 ;
 
 proc sgplot data=btc_analytic_file_table02;
-    scatter x = Year y = Total_volume;
-    symbol1 v=star c=blue;
+    styleattrs datacolors=(red green purple orange cyan) backcolor=vpav wallcolor=pwh;
+    vbox Total_volume / category=Year group=Year;
 run;
 title;
 footnote;
@@ -234,7 +224,7 @@ proc sgplot data=btc_analytic_file_data1;
     symbol1 v=star c=blue;
 run;
 
-title3 justify=left
+title1 justify=left
 "Closing price of bitcoin and days"
 ;
 
@@ -266,7 +256,7 @@ proc ARIMA data = btc_analytic_file_data1;
 run;
 
 *Timeseries model;
-title3 justify=left
+title1 justify=left
 "ARIMA(1,1,1) model for closing price prediction"
 ;
 
